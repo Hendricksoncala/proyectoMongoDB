@@ -1,3 +1,3 @@
-// import {
-//     getAll
-// } from "./query.js";
+import {
+    getAll
+} from "./query.js";
