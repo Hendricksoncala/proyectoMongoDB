@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { MongoClient } from "mongodb";
 
 export class connect{
@@ -19,8 +20,10 @@ export class connect{
        this.#pass = process.env.MONGO_PWD;
        this.#host = process.env.MONGO_HOST;
        this.#cluster = process.env.MONGO_CLUSTER;
+       
 
        this.#open();
+       this.db = this.conexion.db('movis')
        connect.instance = this;
        return this;
    }

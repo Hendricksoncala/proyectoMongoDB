@@ -2,6 +2,8 @@ import {
     connect
 } from "../helpers/connection.js"
 
-let variable = new connect();
+import {
+    getAll
+} from "./module/usuario.js"
 
-console.log (variable)
+ console.log (await getAll())

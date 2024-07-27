@@ -1,3 +1,7 @@
 import {
     getAll
-} from "./query.js";
+} from "./usuario.js";
+
+export {
+    getAll
+} from "./index.js"
