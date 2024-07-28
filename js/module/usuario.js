@@ -10,7 +10,6 @@ export async function getAll(){
     let query = await coleccion.find({}).toArray()
 
 
-    let pelicula = await db.collection('pelicula')
 
-    console.log(query)
+    console.table(query)
 }

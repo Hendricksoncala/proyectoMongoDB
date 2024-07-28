@@ -2,6 +2,12 @@ import {
     getAll
 } from "./usuario.js";
 
+import {
+    getAll,
+    get
+} from "./pelicula.js";
+
 export {
-    getAll
+    getAll,
+    get
 } from "./index.js"
