@@ -3,10 +3,6 @@ import {
 } from "../helpers/connection.js"
 
 import {
-    getAll as getUser
-} from "./module/usuario.js"
-
-import {
     getAll as getMovie,
     get as getOneMovie
 
@@ -23,8 +19,13 @@ import {
 } from "./module/asiento.js"
 
 import {
-    create as createUser
+    create as createUser,
+    get as getUser,
+    update as updateUser,
+    getAll as getAllUser,
+    getByRol as getUserByRol
+
 }from "./module/cliente.js"
 
 //  console.log (await getUser())
- console.log (await createTicket())
+ console.log (await getUserByRol())
