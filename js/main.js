@@ -22,5 +22,9 @@ import {
 
 } from "./module/asiento.js"
 
+import {
+    create as createUser
+}from "./module/cliente.js"
+
 //  console.log (await getUser())
- console.log (await getAsiento())
+ console.log (await createTicket())

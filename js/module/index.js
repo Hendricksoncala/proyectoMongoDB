@@ -21,6 +21,10 @@ import {
     getAll as getAsiento
 } from "./module/asiento.js"
 
+import {
+    create as createUser
+} from "./module/cliente.js"
+
 
 export {
 
