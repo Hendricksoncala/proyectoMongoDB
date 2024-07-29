@@ -12,5 +12,15 @@ import {
 
 } from "./module/pelicula.js"
 
+import {
+    create as createTicket,
+} from "./module/tickets.js"
+
+
+import {
+    getAll as getAsiento ,
+
+} from "./module/asiento.js"
+
 //  console.log (await getUser())
- console.log (await getMovie())
+ console.log (await getAsiento())

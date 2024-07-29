@@ -1,13 +1,43 @@
 import {
-    getAll
-} from "./usuario.js";
+    connect
+} from "../helpers/connection.js"
 
 import {
-    getAll,
-    get
-} from "./pelicula.js";
+    getAll as getUser
+} from "./module/usuario.js"
+
+import {
+    getAll as getMovie,
+    get as getOneMovie
+
+} from "./module/pelicula.js"
+
+import {
+    create as createTicket,
+    getAll as getTicket
+} from "./module/tickets.js"
+
+import {
+    getAll as getAsiento
+} from "./module/asiento.js"
+
 
 export {
-    getAll,
-    get
+
+    
+    getUser,
+
+    //movie
+    getMovie,
+    getOneMovie,
+
+    //ticket
+    createTicket,
+    getTicket,
+
+    getAsiento,
+    getAll
+
 } from "./index.js"
+
+
