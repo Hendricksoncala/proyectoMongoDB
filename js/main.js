@@ -48,7 +48,12 @@ RESPUESTA:
 }
 */ 
 
-// shopTicket().catch(console.error);
+// // Crear un ticket
+// import { createTicket } from "./data.js";
+// console.log("\n--- Crear un ticket ---");
+// createTicket()
+//   .then(info => console.log(info))
+//   .catch(console.error);
 
 
 //*2.2 verificar disponibilidad de sala

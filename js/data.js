@@ -39,28 +39,26 @@ export async function getMovie(){
  ** 2. API par comprar boletos:
  *Se esta creando el ticket, se esta permitiendo la compra de boletos 
  */
- export async function createTicket() { // Cambiamos el nombre de la función
+ export async function createTicket() {
     try {
-      const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8");
-      const clienteId = new ObjectId("66a7053d49b83a018940f87b");
-      const asientoIds = [
-          new ObjectId("66a815847a512a9f93195884"),
-          new ObjectId("66a815847a512a9f93195885"),
-          new ObjectId("66a815847a512a9f93195886")
-      ];
-      const fechaCompra = new Date("2024-07-28T10:30:00Z");
-      const metodoPago = "Tarjeta";
-  
-      const ticketManager = new TicketManager(funcionId, clienteId, asientoIds, fechaCompra, metodoPago);
-      const ticket = await ticketManager.create();
-  
-      console.log(ticket);
-      return ticket; // Retornamos el ticket creado
+        const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8");
+        const clienteId = new ObjectId("66a7053d49b83a018940f87b");
+        const asientoIds = [
+            new ObjectId("66a815847a512a9f93195884"),
+            new ObjectId("66a815847a512a9f93195885"),
+            new ObjectId("66a815847a512a9f93195886")
+        ];
+        const fechaCompra = new Date("2024-07-28T10:30:00Z");
+        const metodoPago = "Tarjeta";
+
+        const ticket = await TicketManager.create(funcionId, clienteId, asientoIds, fechaCompra, metodoPago);
+        console.log(ticket);
+        return ticket;
     } catch (error) {
-      console.error('Error al crear el ticket y reservar asientos:', error);
-      throw error;
+        console.error('Error al crear el ticket y reservar asientos:', error);
+        throw error;
     }
-  }
+}
 
 
 // *2.1, verificar disponibilidad de los asientos
