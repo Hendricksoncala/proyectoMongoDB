@@ -12,7 +12,7 @@ export class AsientoManager {
         // No necesitas un constructor específico aquí
     }
 
-    static async reservarAsientos(funcionId, asientosIds) { // Esta es la función principal
+     async reservarAsientos(funcionId, asientosIds) { // Esta es la función principal
         try {
             // Validar datos de entrada
             if (!funcionId || !asientosIds || !Array.isArray(asientosIds) || asientosIds.length === 0) {

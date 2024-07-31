@@ -58,7 +58,20 @@ export async function getMovie(){
 }
 
 
-// *segunda punto del 2, verificar disponibilidad
+// *2.1, verificar disponibilidad de los asientos
 export async function getSalaInfo() {
     AsientoManager.getSalaInfo()
 }
+
+
+// *3 reservar asientos
+export async function reservarAsientos() {
+    const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8"); 
+    const asientosIds = [
+      new ObjectId("66a815847a512a9f93195882"), 
+      new ObjectId("66a815847a512a9f93195887")  
+    ]; 
+  
+    const asientoManager = new AsientoManager(); // Crear instancia de AsientoManager
+    return await asientoManager.reservarAsientos(funcionId, asientosIds); // Llamar al método en la instancia
+  }

@@ -1,6 +1,7 @@
 import { connect } from "../helpers/connection.js"; // Asegúrate de que la ruta sea correcta
 import { TicketManager } from "./module/tickets.js";
 import { PeliculaManager } from "./module/pelicula.js";
+import { AsientoManager } from "./module/asiento.js";
 import { shopTicket } from "./data.js";
 import { ObjectId } from "mongodb";
 
@@ -29,10 +30,10 @@ no nos da la informacion que queremos ver completa
 **1.2
  *Nos mostrara una detallada informacion de la pelicula  que busquemos por el nombre de esta
  */
-import { getMovie } from "./data.js";
-getMovie()
-  .then(info => console.log(info)) // Manejar la respuesta exitosa
-  .catch(console.error); // Manejar el error
+// import { getMovie } from "./data.js";
+// getMovie()
+//   .then(info => console.log(info)) // Manejar la respuesta exitosa
+//   .catch(console.error); // Manejar el error
 
 
 /*
@@ -56,3 +57,15 @@ RESPUESTA:
 //   .then(info => console.log(info)) // Manejar la respuesta exitosa
 //   .catch(console.error); // Manejar el error
 
+/* 
+*3 Reservar asientos
+#Permitir la selección y reserva de asientos para una proyección específica.
+# los asientos se guardan en asientos ocupados en la sala y la funcion que elija el cliente
+*/
+
+import { reservarAsientos } from "./data.js";
+reservarAsientos()
+  .then(info => console.log(info)) // Manejar la respuesta exitosa
+  .catch(console.error); // Manejar el error
+
+  
