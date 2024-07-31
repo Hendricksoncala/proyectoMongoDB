@@ -121,3 +121,29 @@ RESPUESTA:
 // getAllClientes()
 //   .then(info => console.log(info))
 //   .catch(console.error);
+
+
+
+/**
+*CREACION DE USERS, ADMIN
+ */
+import UserManager from '../db/userManager.js';  
+
+async function main() {  
+  const userManager = new UserManager();  
+
+  await userManager.connect();  
+
+  // Crear usuario admin  
+  
+  await userManager.createAdmin('movisAdmin', 'adminPassword');  
+
+  // Crear usuario lector  
+
+  await userManager.createReader('ticketViewer', 'viewerPassword');  
+
+  await userManager.close();  
+}  
+
+// Ejecutar el script  
+main().catch(console.error);  
