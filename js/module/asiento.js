@@ -52,6 +52,58 @@ export class AsientoManager {
         }
     } // Fin de la función reservarAsientos
 
+
+    async cancelarReserva(funcionId, asientosIds) {
+        try {
+            // Validar datos de entrada
+            if (!funcionId || !asientosIds || !Array.isArray(asientosIds) || asientosIds.length === 0) {
+                throw new Error('Datos de cancelación inválidos');
+            }
+
+            // Verificar si los asientos están reservados en la función y actualizar su estado
+            for (const asientoId of asientosIds) {
+                // Verificar si el asiento está reservado en la función
+                const funcion = await coleccionFuncion.findOne({
+                    _id: funcionId,
+                    asientos_ocupados: asientoId, // Verificar si el asiento está en la lista de ocupados
+                });
+                if (!funcion) {
+                    // Si el asiento no está ocupado en la función, no es necesario hacer nada
+                    console.log(`El asiento ${asientoId} no estaba reservado en esta función`);
+                    continue;
+                }
+
+                // Actualizar el estado del asiento a "disponible"
+                const resultadoActualizacion = await coleccionAsiento.updateOne(
+                    { _id: asientoId, estado: "reservado" }, // Solo actualizar si está reservado
+                    { $set: { estado: "disponible" } }
+                );
+
+                if (resultadoActualizacion.modifiedCount === 0) {
+                    // El asiento no estaba en estado "reservado", lanzar un error o continuar
+                    console.warn(`El asiento ${asientoId} no estaba en estado reservado`);
+                    // Opcionalmente, puedes lanzar un error aquí si quieres detener la cancelación:
+                    // throw new Error(`El asiento ${asientoId} no estaba en estado reservado`);
+                }
+
+                // Eliminar el asiento del array de asientos ocupados de la función
+                await coleccionFuncion.updateOne(
+                    { _id: funcionId },
+                    { $pull: { asientos_ocupados: asientoId } }
+                );
+            }
+
+            console.log("Reserva de asientos cancelada correctamente");
+            return true;
+
+        } catch (error) {
+            console.error('Error al cancelar reserva de asientos:', error);
+            throw error;
+        }
+    }
+// fin de cancelar reserva 
+    
+
     static async getSalaInfo(salaId = new ObjectId('66a6c202e3cfd0b8c74fe5a3')) { 
         try {
             const sala = await coleccionSala.findOne({ _id: salaId });

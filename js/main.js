@@ -63,9 +63,18 @@ RESPUESTA:
 # los asientos se guardan en asientos ocupados en la sala y la funcion que elija el cliente
 */
 
-import { reservarAsientos } from "./data.js";
-reservarAsientos()
-  .then(info => console.log(info)) // Manejar la respuesta exitosa
-  .catch(console.error); // Manejar el error
+// import { reservarAsientos } from "./data.js";
+// reservarAsientos()
+//   .then(info => console.log(info)) // Manejar la respuesta exitosa
+//   .catch(console.error); // Manejar el error
 
-  
+
+/* 
+*3.2 cancelar reserva de asientos
+#Permitir la cancelación de una reserva de asiento ya realizada.
+*/
+// import { cancelarReservaAsientos } from "./data.js";
+// cancelarReservaAsientos()
+//   .then(info => console.log(info)) // Manejar la respuesta exitosa
+//   .catch(console.error); // Manejar el error
+
