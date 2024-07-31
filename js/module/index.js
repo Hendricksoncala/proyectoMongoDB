@@ -10,11 +10,13 @@ import {
 
 import {
     create as createTicket,
-    getAll as getTicket
+    getAll as getTicket,
+    cancelarReserva as cancelarReserva
 } from "./module/tickets.js"
 
 import {
-    getAll as getAsiento
+    getAll as getAsiento,
+    reservarAsientos as reservarAsientos
 } from "./module/asiento.js"
 
 import {
@@ -42,9 +44,13 @@ export {
     //ticket
     createTicket,
     getTicket,
+    
+    
 
+    //asiento
     getAsiento,
-    getAll
+    getAll,
+    reservarAsientos
 
 } from "./index.js"
 

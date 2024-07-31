@@ -24,7 +24,7 @@ export async function create(
     email: "carlos.mendoza@example.com",
     telefono: "+57 300 123 4567", 
     tarjeta: true,
-    tarjeta_id: 123456789, // Reemplaza con un ObjectId válido si el cliente tiene tarjeta
+    tarjeta_id: 123456789, 
     tipoUsuario: "VIP"
     }
 

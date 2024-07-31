@@ -1,108 +1,68 @@
-import { connect } from "../../helpers/connection.js";
-import * as v from "./validaciones.js";
 import { ObjectId } from "mongodb";
+import { connect } from "../../helpers/connection.js";
 
 const connection = new connect();
 const db = await connection.conexion.db('movis');
-const coleccionAsiento = await db.collection('asiento');
-const coleccionTicket = await db.collection('ticket');
-const coleccionSala = await db.collection('sala');
-const coleccionCliente = await db.collection('cliente');
+const coleccionAsiento = db.collection('asiento');
+const coleccionTicket = db.collection('ticket');
+const coleccionSala = db.collection('sala');
+const coleccionCliente = db.collection('cliente');
+const coleccionFuncion = db.collection('funcion');
 
 
-
-
-export async function create(
-    {
-        funcion_id,
-        cliente_id,
-        asiento_id,
-        precio_total,
-        fecha_compra,
-        metodo_pago,
-        estado
-    }
-    =
-    {
-        funcion_id: new ObjectId("64c09e2c8b857f123456789a"), 
-        cliente_id: new ObjectId("66a7053d49b83a018940f87b"), 
-        asiento_id: [
-          new ObjectId("66a6e0b0e3cfd0b8c74fe5e0"), 
-          new ObjectId("64c09f3d8b857f123456789c")  
-        ], 
-        precio_total: 25.50,
-        fecha_compra: new Date("2024-07-28T10:30:00Z"), 
-        metodo_pago: "Tarjeta",
-        estado: "activo" 
-    }) {
-
-        let cliente = await coleccionCliente.findOne({_id: cliente_id})
-        console.log("El cliente registrado para la compra de este ticket es : ")
-        console.log(cliente)
-        
-        // if(cliente.tipoUsuario !== 'administrador'){
-        //     console.log("Este usuario no puede vender tickets")
-        // }
-
-
-        //aqui se valida que si el usuarios es vip se le aplicara el descuento---------------
-        if(cliente.tipoUsuario === 'VIP' && cliente.tarjeta){
-            if(getTarjeta()){
-                console.log("Tienes descuento !")
-                precio_total = precio_total - precio_total*0.10
-            }else {
-                return console.log('tarjeta no valida, intente denuevo.')
-                
-            }
-
+//
+export class TicketManager {
+    constructor() {} // El constructor no necesita argumentos
+  
+    static async create(funcionId, clienteId, asientoIds, fechaCompra, metodoPago) { 
+      try {
+        const cliente = await coleccionCliente.findOne({ _id: clienteId });
+        console.log("El cliente registrado para la compra de este ticket es: ");
+        console.log(cliente);
+  
+        const funcion = await coleccionFuncion.findOne({ _id: funcionId });
+        if (!funcion) {
+          throw new Error('La función no existe');
         }
-
-        //
-        
-    let create = await coleccionTicket.insertOne({
-        funcion_id:funcion_id,
-        cliente_id:cliente_id ,
-        asiento_id: asiento_id,
-        precio_total:precio_total,
-        fecha_compra:fecha_compra,
-        metodo_pago:metodo_pago,
-        estado:estado
-    });
-    
-    //esto es para controlar la capacidad de la sala y mostrar cuales asientos quedan disponibles cada asiento que se vaya guardando sera descontado
-
-    
-    if(create){
-        let asientoId = asiento_id[0]
-        console.log(asientoId)
-        let asiento = await coleccionAsiento.find({_id: asientoId}).toArray();
-        console.log(asiento)
-        let sala = await coleccionSala.find({_id: asiento[0].sala_id}).toArray();
-        console.log(sala)
-
-        let salaCapacidad = await coleccionSala.updateOne({ _id: asiento[0].sala_id }, { $set: { capacidad: sala[0].capacidad - 1 } });
-        return salaCapacidad;
-    
+  
+        let precioTotal = 0;
+        for (const asientoId of asientoIds) {
+          const asiento = await coleccionAsiento.findOne({ _id: asientoId });
+          const sala = await coleccionSala.findOne({ _id: asiento.sala_id });
+          precioTotal += sala.precios[asiento.categoria];
+        }
+  
+        if (cliente.tipoUsuario === 'VIP' && cliente.tarjeta) {
+          if (this.getTarjeta(cliente)) {
+            console.log("Tienes descuento !");
+            precioTotal *= (1 - 0.10); // Aplicar el 10% de descuento
+          } else {
+            return console.log('Tarjeta no válida, intente de nuevo.');
+          }
+        }
+  
+        const resultadoTicket = await coleccionTicket.insertOne({
+          funcion_id: funcionId,
+          cliente_id: clienteId,
+          asiento_id: asientoIds,
+          precio_total: precioTotal,
+          fecha_compra: fechaCompra,
+          metodo_pago: metodoPago,
+          estado: "activo"
+        });
+  
+        console.log("Se ha agregado el ticket correctamente");
+        return resultadoTicket;
+      } catch (error) {
+        console.error('Error al crear el ticket:', error);
+        throw error;
+      }
     }
-    //si la tarjeta es correcta se aplicara el descuento y mostrara el resultado:
-    /*
-    {
-    acknowledged: true,
-    modifiedCount: 1,
-    upsertedId: null,
-    upsertedCount: 0,
-    matchedCount: 1
+  
+    static getTarjeta(cliente) {
+      return cliente.tarjeta_id === 123456789; // Verificar si el número de tarjeta coincide
     }
+  }
 
-    si no no dara descuento
-    */ 
-    
-     function getTarjeta({tarjeta}={tarjeta: 123456789}){
-        return cliente.tarjeta_id === tarjeta 
-    }
-
-}
-
-
-
+//BUSCAR DISPONIBILIDAD DE SALA:
 

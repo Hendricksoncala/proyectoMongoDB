@@ -1,31 +1,58 @@
-import {
-    connect
-} from "../helpers/connection.js"
+import { connect } from "../helpers/connection.js"; // Asegúrate de que la ruta sea correcta
+import { TicketManager } from "./module/tickets.js";
+import { PeliculaManager } from "./module/pelicula.js";
+import { shopTicket } from "./data.js";
+import { ObjectId } from "mongodb";
 
-import {
-    getAll as getMovie,
-    get as getOneMovie
+const connection = new connect();
+const db = await connection.conexion.db('movis');
 
-} from "./module/pelicula.js"
+const coleccionAsiento = await db.collection('asiento');
+const coleccionTicket = await db.collection('ticket');
+const coleccionSala = await db.collection('sala');
+const coleccionCliente = await db.collection('cliente');
+const coleccionFuncion = await db.collection('funcion');
+const coleccionPelicula = await db.collection('pelicula')
 
-import {
-    create as createTicket,
-} from "./module/tickets.js"
+
+/* 
+*1. listado de peliculas
+en este caso devuelve un string y no un objeto porque el objeto
+no nos da la informacion que queremos ver completa
+*/
+// import { getAllMovie } from "./data.js";
+// getAllMovie()
+//   .then(info => console.log(info)) // Manejar la respuesta exitosa
+//   .catch(console.error); // Manejar el error
+
+/**
+**1.2
+ *Nos mostrara una detallada informacion de la pelicula  que busquemos por el nombre de esta
+ */
+import { getMovie } from "./data.js";
+getMovie()
+  .then(info => console.log(info)) // Manejar la respuesta exitosa
+  .catch(console.error); // Manejar el error
 
 
-import {
-    getAll as getAsiento ,
+/*
+*2. compra de boletos
+**API para Comprar Boletos:** Permitir la compra de boletos para una película específica, 
+incluyendo la selección de la fecha y la hora de la proyección.
+RESPUESTA:
+{
+  acknowledged: true,
+  insertedId: new ObjectId('66a97b95652c5fe3591ed34e')
+}
+*/ 
 
-} from "./module/asiento.js"
+// shopTicket().catch(console.error);
 
-import {
-    create as createUser,
-    get as getUser,
-    update as updateUser,
-    getAll as getAllUser,
-    getByRol as getUserByRol
 
-}from "./module/cliente.js"
+//*2.2 verificar disponibilidad de sala
 
-//  console.log (await getUser())
- console.log (await getUserByRol())
+// import { getSalaInfo } from "./data.js";
+// getSalaInfo()
+//   .then(info => console.log(info)) // Manejar la respuesta exitosa
+//   .catch(console.error); // Manejar el error
+
