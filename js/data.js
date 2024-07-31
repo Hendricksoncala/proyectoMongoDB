@@ -1,7 +1,8 @@
 import { connect } from "../helpers/connection.js"; // Asegúrate de que la ruta sea correcta
 import { TicketManager } from "./module/tickets.js";
-import { AsientoManager } from "./module/asiento.js"; // Importación corregida
 import { PeliculaManager } from "./module/pelicula.js";
+import { AsientoManager } from "./module/asiento.js";
+import { ClienteManager } from "./module/cliente.js";
 import { ObjectId } from "mongodb";
 
 
@@ -38,24 +39,28 @@ export async function getMovie(){
  ** 2. API par comprar boletos:
  *Se esta creando el ticket, se esta permitiendo la compra de boletos 
  */
- export async function shopTicket() {
-    
-    const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8");
-    const clienteId = new ObjectId("66a7053d49b83a018940f87b");
-    const asientoIds = [
-        new ObjectId("66a815847a512a9f93195884"),
-        new ObjectId("66a815847a512a9f93195885"),
-        new ObjectId("66a815847a512a9f93195886")
-    ];
-
-    const fechaCompra = new Date("2024-07-28T10:30:00Z");
-    const metodoPago = "Tarjeta";
-
-    const ticketManager = new TicketManager();
-    const ticket = await TicketManager.create(funcionId, clienteId, asientoIds, fechaCompra, metodoPago);
-
-    console.log(ticket);
-}
+ export async function createTicket() { // Cambiamos el nombre de la función
+    try {
+      const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8");
+      const clienteId = new ObjectId("66a7053d49b83a018940f87b");
+      const asientoIds = [
+          new ObjectId("66a815847a512a9f93195884"),
+          new ObjectId("66a815847a512a9f93195885"),
+          new ObjectId("66a815847a512a9f93195886")
+      ];
+      const fechaCompra = new Date("2024-07-28T10:30:00Z");
+      const metodoPago = "Tarjeta";
+  
+      const ticketManager = new TicketManager(funcionId, clienteId, asientoIds, fechaCompra, metodoPago);
+      const ticket = await ticketManager.create();
+  
+      console.log(ticket);
+      return ticket; // Retornamos el ticket creado
+    } catch (error) {
+      console.error('Error al crear el ticket y reservar asientos:', error);
+      throw error;
+    }
+  }
 
 
 // *2.1, verificar disponibilidad de los asientos
@@ -86,4 +91,77 @@ export async function cancelarReservaAsientos() {
   
     const asientoManager = new AsientoManager();
     await asientoManager.cancelarReserva(funcionId, asientosIds);
+  }
+
+
+/* 
+*5 en adelante con todas las caracteristicas de roles definidos:
+
+*/const newCliente = {
+    nombre: "Hendrickson Cala",
+    email: "hendrickson@gmail.com",
+    telefono: "+1 555 555 5555",
+    tarjeta: false,
+    tarjeta_id: null, // Asumiendo que tarjeta_id es nulo si tarjeta es falsa
+    tipoUsuario: "estandar"
+  };
+  
+  // Función para crear un cliente (API para Crear Usuario)
+  export async function createCliente() {
+    try {
+      const clienteCreado = await ClienteManager.create(newCliente);
+      console.log("Cliente creado:", clienteCreado);
+      return clienteCreado;
+    } catch (error) {
+      console.error("Error al crear cliente:", error);
+      throw error;
+    }
+  }
+  
+  // Función para obtener un cliente por ID
+  export async function getCliente(id) {
+    try {
+      const cliente = await ClienteManager.get({ _id: id });
+      console.log("Cliente obtenido:", cliente);
+      return cliente;
+    } catch (error) {
+      console.error("Error al obtener cliente:", error);
+      throw error;
+    }
+  }
+  
+  // Función para actualizar un cliente
+  export async function updateCliente(id, updateData) {
+    try {
+      const clienteActualizado = await ClienteManager.update({ _id: id, ...updateData });
+      console.log("Cliente actualizado:", clienteActualizado);
+      return clienteActualizado;
+    } catch (error) {
+      console.error("Error al actualizar cliente:", error);
+      throw error;
+    }
+  }
+  
+  // Función para obtener clientes por rol
+  export async function getClientesByRol(rol) {
+    try {
+      const clientes = await ClienteManager.getByRol({ tipoUsuario: rol });
+      console.log("Clientes por rol:", clientes);
+      return clientes;
+    } catch (error) {
+      console.error("Error al obtener clientes por rol:", error);
+      throw error;
+    }
+  }
+  
+  // Función para obtener todos los clientes
+  export async function getAllClientes() {
+    try {
+      const clientes = await ClienteManager.getAll();
+      console.log("Todos los clientes:", clientes);
+      return clientes;
+    } catch (error) {
+      console.error("Error al obtener todos los clientes:", error);
+      throw error;
+    }
   }

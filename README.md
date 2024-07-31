@@ -17,25 +17,232 @@ Desarrollar una serie de APIs para la aplicación web de CineCampus utilizando M
 ### **Requisitos Funcionales**
 
 1. Selección de Películas:
-   - **API para Listar Películas:** Permitir la consulta de todas las películas disponibles en el catálogo, con detalles como título, género, duración y horarios de proyección.
 
-/*
-*/
+   - **API para Listar Películas:** Permitir la consulta de todas las películas disponibles en el catálogo, con detalles como título, género, duración y horarios de proyección.✅
 
-   - **API para Obtener Detalles de Película:** Permitir la consulta de información detallada sobre una película específica, incluyendo sinopsis.
+     ```javascript
+     main:
+     import { getAllMovie } from "./data.js";
+     getAllMovie()
+       .then(info => console.log(info)) // Manejar la respuesta exitosa
+       .catch(console.error); // Manejar el error
+     
+     ```
+
+     
+
+   - **API para Obtener Detalles de Película:** Permitir la consulta de información detallada sobre una película específica, incluyendo sinopsis.✅
+
+     ```javascript
+     respuesta:
+     main:
+     import { getMovie } from "./data.js";
+     getMovie()
+       .then(info => console.log(info)) // Manejar la respuesta exitosa
+       .catch(console.error); // Manejar el error
+     
+     
+     {
+       _id: new ObjectId('66a6b2d7e3cfd0b8c74fe50a'),
+       nombre: 'Whiplash',
+       genero: 'Drama',
+       duracion: 106,
+       sinopsis: 'Un joven baterista lucha bajo la tutela de un despiadado instructor que no se detendrá ante nada para alcanzar la grandeza de su alumno.'
+     }
+     ```
+
+     
+
 2. Compra de Boletos:
-   - **API para Comprar Boletos:** Permitir la compra de boletos para una película específica, incluyendo la selección de la fecha y la hora de la proyección.
-   - **API para Verificar Disponibilidad de Asientos:** Permitir la consulta de la disponibilidad de asientos en una sala para una proyección específica.
+
+   - **API para Comprar Boletos:** Permitir la compra de boletos para una película específica, incluyendo la selección de la fecha y la hora de la proyección. ✅
+
+     ```javascript
+     main:
+     shopTicket().catch(console.error);
+     ```
+
+     
+
+   - **API para Verificar Disponibilidad de Asientos:** Permitir la consulta de la disponibilidad de asientos en una sala para una proyección específica.✅
+
+     ```javascript
+     import { getSalaInfo } from "./data.js";
+     getSalaInfo()
+       .then(info => console.log(info)) // Manejar la respuesta exitosa
+       .catch(console.error); // Manejar el error
+     ```
+
+     
+
 3. Asignación de Asientos:
-   - **API para Reservar Asientos:** Permitir la selección y reserva de asientos para una proyección específica.
-   - **API para Cancelar Reserva de Asientos:** Permitir la cancelación de una reserva de asiento ya realizada.
+
+   - **API para Reservar Asientos:** Permitir la selección y reserva de asientos para una proyección específica.✅
+
+     ```javascript
+     main:
+     import { reservarAsientos } from "./data.js";
+     reservarAsientos()
+       .then(info => console.log(info)) // Manejar la respuesta exitosa
+       .catch(console.error); // Manejar el error
+     
+     respuesta:
+     Restarting 'js/main.js'
+     Asientos reservados correctamente
+     true
+     
+     ```
+
+     
+
+   - **API para Cancelar Reserva de Asientos:** Permitir la cancelación de una reserva de asiento ya realizada.✅
+
+     ```javascript
+     respuesta:
+     Reserva de asientos cancelada correctamente
+     
+     main:
+     
+     import { cancelarReservaAsientos } from "./data.js";
+     cancelarReservaAsientos()
+       .then(info => console.log(info)) // Manejar la respuesta exitosa
+       .catch(console.error); // Manejar el error
+     ```
+
+     
+
 4. Descuentos y Tarjetas VIP:
-   - **API para Aplicar Descuentos:** Permitir la aplicación de descuentos en la compra de boletos para usuarios con tarjeta VIP.
-   - **API para Verificar Tarjeta VIP:** Permitir la verificación de la validez de una tarjeta VIP durante el proceso de compra.
-5. Roles Definidos:**Administrador:** Tiene permisos completos para gestionar el sistema, incluyendo la venta de boletos en el lugar físico. Los administradores no están involucrados en las compras en línea realizadas por los usuarios.**Usuario Estándar:** Puede comprar boletos en línea sin la intervención del administrador.**Usuario VIP:** Puede comprar boletos en línea con descuentos aplicables para titulares de tarjetas VIP.**API para Crear Usuario:** Permitir la creación de nuevos usuarios en el sistema, asignando roles y privilegios específicos (usuario estándar, usuario VIP o administrador).**API para Obtener Detalles de Usuario:** Permitir la consulta de información detallada sobre un usuario, incluyendo su rol y estado de tarjeta VIP.**API para Actualizar Rol de Usuario:** Permitir la actualización del rol de un usuario (por ejemplo, cambiar de usuario estándar a VIP, o viceversa).**API para Listar Usuarios:** Permitir la consulta de todos los usuarios del sistema, con la posibilidad de filtrar por rol (VIP, estándar o administrador).
+
+   - **API para Aplicar Descuentos:** Permitir la aplicación de descuentos en la compra de boletos para usuarios con tarjeta VIP.✅
+
+     ```javascript
+     #esto se cumple en la clase de TicketManager cuando se crea el ticket, si el usuario es VIP porque tiene tarjeta la tarjeta se validara y si concuerda se realiza el descuento
+     
+     #parte del codigo que lo hace:
+         static getTarjeta(cliente) {
+           return cliente.tarjeta_id === 123456789; // Verificar si el número de tarjeta coincide
+         }
+     
+     #y aqui se aplica la regla del descuento:
+             if (cliente.tipoUsuario === 'VIP' && cliente.tarjeta) {
+               if (this.getTarjeta(cliente)) {
+                 console.log("Tienes descuento !");
+                 precioTotal *= (1 - 0.10); // Aplicar el 10% de descuento
+               } else {
+                 return console.log('Tarjeta no válida, intente de nuevo.');
+               }
+             }
+     ```
+
+     
+
+   - **API para Verificar Tarjeta VIP:** Permitir la verificación de la validez de una tarjeta VIP durante el proceso de compra.✅
+
+   - ```javascript
+     #parte del codigo que la valida:
+     
+         static getTarjeta(cliente) {
+           return cliente.tarjeta_id === 123456789; // Verificar si el número de tarjeta coincide
+         }
+     
+     #todo esto en la clase TicketManager en ticket.js
+     ```
+
+   - 
+
+5. Roles Definidos:
+
+   **Administrador:** Tiene permisos completos para gestionar el sistema, incluyendo la venta de boletos en el lugar físico. Los administradores no están involucrados en las compras en línea realizadas por los usuarios.✅
+
+   ```javascript
+   dato predeterminado para roles:
+   */const newCliente = {
+       nombre: "Hendrickson Cala",
+       email: "hendrickson@gmail.com",
+       telefono: "+1 555 555 5555",
+       tarjeta: false,
+       tarjeta_id: null, // Asumiendo que tarjeta_id es nulo si tarjeta es falsa
+       tipoUsuario: "estandar"
+     };
+   ```
+
+   
+
+   **Usuario Estándar:** Puede comprar boletos en línea sin la intervención del administrador.✅
+
+   ```javascript
+   puede comprar su boleta con la funcion de comprar ticket y se valida su rol, de acuerdo a este se le dara descuento o no
+   ```
+
+   
+
+   **Usuario VIP:** Puede comprar boletos en línea con descuentos aplicables para titulares de tarjetas VIP.✅
+
+   ```javascript
+   funcion de comprar tickets lo pueden hacer y el descuento se le genera si el usuario es vip y se valida su tarjeta
+   ```
+
+   
+
+   **API para Crear Usuario:** Permitir la creación de nuevos usuarios en el sistema, asignando roles y privilegios específicos (usuario estándar, usuario VIP o administrador).✅
+
+   ```javascript
+   // Crear un cliente
+   console.log("\n--- Crear un cliente ---");
+   createCliente()
+     .then(info => console.log(info))
+     .catch(console.error);
+   ```
+
+   
+
+   **API para Obtener Detalles de Usuario:** Permitir la consulta de información detallada sobre un usuario, incluyendo su rol y estado de tarjeta VIP.✅
+
+   ```javascript
+   // Obtener un cliente por ID
+   console.log("\n--- Obtener un cliente ---");
+   getCliente('66a70580acf16585a55981f0') // Reemplaza 'ID_DEL_CLIENTE' por el ID real del cliente
+     .then(info => console.log(info))
+     .catch(console.error);
+   
+   ```
+
+   
+
+   **API para Actualizar Rol de Usuario:** Permitir la actualización del rol de un usuario (por ejemplo, cambiar de usuario estándar a VIP, o viceversa).✅
+
+   ```javascript
+   // Actualizar un cliente
+   console.log("\n--- Actualizar un cliente ---");
+   updateCliente('66a72297e3cfd0b8c74fe5f4', { nombre: 'Marta Gimenez' }) // Reemplaza 'ID_DEL_CLIENTE' por el ID real del cliente y proporciona los datos de actualización
+     .then(info => console.log(info))
+     .catch(console.error);
+   ```
+
+   
+
+   **API para Listar Usuarios:** Permitir la consulta de todos los usuarios del sistema, con la posibilidad de filtrar por rol (VIP, estándar o administrador).✅
+
+   ```javascript
+   // Obtener clientes por rol
+   console.log("\n--- Obtener clientes por rol ---");
+   getClientesByRol('estandar')
+     .then(info => console.log(info))
+     .catch(console.error);
+   
+   // Obtener todos los clientes
+   console.log("\n--- Obtener todos los clientes ---");
+   getAllClientes()
+     .then(info => console.log(info))
+     .catch(console.error);
+   ```
+
+   
+
 6. Compras en Línea:
-   - **API para Procesar Pagos:** Permitir el procesamiento de pagos en línea para la compra de boletos.
-   - **API para Confirmación de Compra:** Enviar confirmación de la compra y los detalles del boleto al usuario.
+
+   - **API para Procesar Pagos:** Permitir el procesamiento de pagos en línea para la compra de boletos.❌
+   - **API para Confirmación de Compra:** Enviar confirmación de la compra y los detalles del boleto al usuario.❌
 
 ### **Requisitos Técnicos**
 

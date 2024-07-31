@@ -2,9 +2,10 @@ import { connect } from "../helpers/connection.js"; // Asegúrate de que la ruta
 import { TicketManager } from "./module/tickets.js";
 import { PeliculaManager } from "./module/pelicula.js";
 import { AsientoManager } from "./module/asiento.js";
-import { shopTicket } from "./data.js";
+import { ClienteManager } from "./module/cliente.js";
 import { ObjectId } from "mongodb";
 
+import { createCliente, getCliente, updateCliente, getClientesByRol, getAllClientes } from "./data.js";
 const connection = new connect();
 const db = await connection.conexion.db('movis');
 
@@ -78,3 +79,40 @@ RESPUESTA:
 //   .then(info => console.log(info)) // Manejar la respuesta exitosa
 //   .catch(console.error); // Manejar el error
 
+
+
+
+/* 
+*5. Roles definidos 
+*/
+
+
+// // Crear un cliente
+// console.log("\n--- Crear un cliente ---");
+// createCliente()
+//   .then(info => console.log(info))
+//   .catch(console.error);
+
+// // Obtener un cliente por ID
+// console.log("\n--- Obtener un cliente ---");
+// getCliente('66a70580acf16585a55981f0') // Reemplaza 'ID_DEL_CLIENTE' por el ID real del cliente
+//   .then(info => console.log(info))
+//   .catch(console.error);
+
+// // Actualizar un cliente
+// console.log("\n--- Actualizar un cliente ---");
+// updateCliente('66a72297e3cfd0b8c74fe5f4', { nombre: 'Marta Gimenez' }) // Reemplaza 'ID_DEL_CLIENTE' por el ID real del cliente y proporciona los datos de actualización
+//   .then(info => console.log(info))
+//   .catch(console.error);
+
+// // Obtener clientes por rol
+// console.log("\n--- Obtener clientes por rol ---");
+// getClientesByRol('estandar')
+//   .then(info => console.log(info))
+//   .catch(console.error);
+
+// // Obtener todos los clientes
+// console.log("\n--- Obtener todos los clientes ---");
+// getAllClientes()
+//   .then(info => console.log(info))
+//   .catch(console.error);
