@@ -22,17 +22,24 @@ class UserManager {
   async connect() {  
     await this.client.connect();  
     this.db = this.client.db(this.dbName);  
+    console.log('Connected to MongoDB');
   }  
 
   async close() {  
     await this.client.close();  
+    console.log('Disconnected from MongoDB');
   }  
 
   async createAdmin(username, password) {  
     await this.db.command({  
       createUser: username,  
       pwd: password,  
-      roles: [{ role: 'dbAdmin', db: this.dbName }, { role: 'readWrite', db: this.dbName }],  
+      roles: [
+        { role: 'dbAdmin', db: this.dbName }, 
+        { role: 'readWrite', db: this.dbName },
+        { role: 'userAdminAnyDatabase', db: 'admin' },
+        { role: 'dbAdminAnyDatabase', db: 'admin' }
+      ],  
     });  
     console.log(`Usuario administrador ${username} creado.`);  
   }  
@@ -41,10 +48,12 @@ class UserManager {
     await this.db.command({  
       createUser: username,  
       pwd: password,  
-      roles: [{ role: 'read', db: this.dbName }],  
+      roles: [
+        { role: 'read', db: this.dbName }
+      ],  
     });  
     console.log(`Usuario lector ${username} creado.`);  
   }  
 }  
 
-export default UserManager;  
+export default UserManager;
