@@ -53,8 +53,6 @@ Desarrollar una serie de APIs para la aplicación web de CineCampus utilizando M
 
      
 
-
-
 2. Compra de Boletos:
 
    - **API para Comprar Boletos:** Permitir la compra de boletos para una película específica, incluyendo la selección de la fecha y la hora de la proyección. ✅
@@ -71,16 +69,14 @@ Desarrollar una serie de APIs para la aplicación web de CineCampus utilizando M
 
      
 
-   - 
-     
-
    - **API para Verificar Disponibilidad de Asientos:** Permitir la consulta de la disponibilidad de asientos en una sala para una proyección específica.✅
 
      ```javascript
-     import { getSalaInfo } from "./data.js";
-     getSalaInfo()
-       .then(info => console.log(info)) // Manejar la respuesta exitosa
-       .catch(console.error); // Manejar el error
+     const salaId = new ObjectId("66a6c202e3cfd0b8c74fe5a3"); 
+     import { obtenerInformacionSala } from "./data.js";
+     obtenerInformacionSala(salaId)
+       .then(info => console.log(info)) 
+       .catch(console.error); 
      ```
 
      
@@ -96,10 +92,6 @@ Desarrollar una serie de APIs para la aplicación web de CineCampus utilizando M
        .then(info => console.log(info)) // Manejar la respuesta exitosa
        .catch(console.error); // Manejar el error
      
-     respuesta:
-     Restarting 'js/main.js'
-     Asientos reservados correctamente
-     true
      
      ```
 
@@ -108,11 +100,7 @@ Desarrollar una serie de APIs para la aplicación web de CineCampus utilizando M
    - **API para Cancelar Reserva de Asientos:** Permitir la cancelación de una reserva de asiento ya realizada.✅
 
      ```javascript
-     respuesta:
-     Reserva de asientos cancelada correctamente
-     
      main:
-     
      import { cancelarReservaAsientos } from "./data.js";
      cancelarReservaAsientos()
        .then(info => console.log(info)) // Manejar la respuesta exitosa
@@ -329,13 +317,3 @@ Los puntos a evaluar serán los siguientes:
 - **25 puntos**: Se creó el repositorio, pero en su rama principal no se encuentra el proyecto general ,al igual que algún archivo en relación al proyecto.
 - **100 puntos**: Se creó exitosamente el repositorio, donde en su rama principal se encuentra el proyecto general y sus archivos en relación a ello, con evidencia de la participación del equipo completo de manera periódica.
 
-
-para todos y su creacion se debe dejar : /${MONGO_DB}
-para conectar con la base de datos como user y solo ver:
-mongodb://ticketViewer:viewerPassword@viaduct.proxy.rlwy.net:52301/movis?authSource=movis  
-
-para conectar con l base de datos como admin y hacer todo:
-mongodb://Karen:campus2023@viaduct.proxy.rlwy.net:52301/movis
-
-para conectarse totalmente a la base de datos:
-mongodb://mongo:gJXMZfPcCPQjzIoxfxtOPWwuRHfyHXXp@viaduct.proxy.rlwy.net:52301/
