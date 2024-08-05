@@ -61,9 +61,10 @@ export async function getMovie(){
 }
 
 
-// *2.1, verificar disponibilidad de los asientos
-export async function getSalaInfo() {
-    AsientoManager.getSalaInfo()
+// *2.2, verificar disponibilidad de los asientos
+export async function obtenerInformacionSala(salaId) { 
+  const asientoManager = new AsientoManager();
+  return await asientoManager.getAll(salaId); 
 }
 
 
@@ -96,13 +97,14 @@ export async function cancelarReservaAsientos() {
 *5 en adelante con todas las caracteristicas de roles definidos:
 
 */const newCliente = {
-    nombre: "Hendrickson Cala",
-    email: "hendrickson@gmail.com",
-    telefono: "+1 555 555 5555",
-    tarjeta: false,
-    tarjeta_id: null, // Asumiendo que tarjeta_id es nulo si tarjeta es falsa
-    tipoUsuario: "estandar"
-  };
+  nombre: "pablito tudisimo",
+  email: "pabxx2@gmail.com",
+  telefono: "+1 354 865 5555",
+  tarjeta: false,
+  tarjeta_id: null, 
+  tipoUsuario: "estandar",
+  password: "campus2023" // Reemplaza con una contraseña hasheada
+};
   
   // Función para crear un cliente (API para Crear Usuario)
   export async function createCliente() {
@@ -128,17 +130,36 @@ export async function cancelarReservaAsientos() {
     }
   }
   
-  // Función para actualizar un cliente
-  export async function updateCliente(id, updateData) {
-    try {
-      const clienteActualizado = await ClienteManager.update({ _id: id, ...updateData });
-      console.log("Cliente actualizado:", clienteActualizado);
-      return clienteActualizado;
-    } catch (error) {
-      console.error("Error al actualizar cliente:", error);
-      throw error;
+// Función para actualizar un cliente (API para Actualizar Rol de Usuario)
+export async function updateCliente(id, updateData) {
+  try {
+    // Validar que el id sea un ObjectId válido
+    if (!ObjectId.isValid(id)) {
+      throw new Error('ID de cliente inválido');
     }
+
+    // Convertir tarjeta_id a ObjectId si es necesario
+    if (updateData.tarjeta && updateData.tarjeta_id) {
+      updateData.tarjeta_id = new ObjectId(updateData.tarjeta_id);
+    } else if (updateData.tarjeta === false) {
+      updateData.tarjeta_id = null;
+    }
+
+    // Realizar la actualización en la base de datos
+    const resultado = await ClienteManager.update({ _id: id, ...updateData });
+
+    // Verificar si se actualizó algún documento
+    if (resultado.modifiedCount === 0) {
+      throw new Error("No se encontró ningún cliente con ese ID");
+    }
+
+    console.log("Cliente actualizado:", resultado);
+    return resultado;
+  } catch (error) {
+    console.error("Error al actualizar cliente:", error.message); // Mostrar el mensaje de error específico
+    throw error;
   }
+}
   
   // Función para obtener clientes por rol
   export async function getClientesByRol(rol) {

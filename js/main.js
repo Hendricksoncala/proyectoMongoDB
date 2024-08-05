@@ -5,6 +5,7 @@ import { AsientoManager } from "./module/asiento.js";
 import { ClienteManager } from "./module/cliente.js";
 import { ObjectId } from "mongodb";
 
+
 import { createCliente, getCliente, updateCliente, getClientesByRol, getAllClientes } from "./data.js";
 const connection = new connect();
 const db = await connection.conexion.db('movis');
@@ -58,11 +59,11 @@ RESPUESTA:
 
 //*2.2 verificar disponibilidad de sala
 
-// import { getSalaInfo } from "./data.js";
-// getSalaInfo()
-//   .then(info => console.log(info)) // Manejar la respuesta exitosa
-//   .catch(console.error); // Manejar el error
-
+// const salaId = new ObjectId("66a6c202e3cfd0b8c74fe5a3"); 
+// import { obtenerInformacionSala } from "./data.js";
+// obtenerInformacionSala(salaId)
+//   .then(info => console.log(info)) 
+//   .catch(console.error); 
 /* 
 *3 Reservar asientos
 #Permitir la selección y reserva de asientos para una proyección específica.
@@ -124,26 +125,26 @@ RESPUESTA:
 
 
 
-/**
-*CREACION DE USERS, ADMIN
- */
-import UserManager from '../db/userManager.js';  
+// /**
+// *CREACION DE USERS, ADMIN
+//  */
+// import UserManager from '../db/userManager.js';  
 
-async function main() {  
-  const userManager = new UserManager();  
+// async function main() {  
+//   const userManager = new UserManager();  
 
-  await userManager.connect();  
+//   await userManager.connect();  
 
-  // Crear usuario admin  
+//   // Crear usuario admin  
   
-  await userManager.createAdmin('movisAdmin', 'adminPassword');  
+//   // await userManager.createAdmin('Karen', 'campus2023');  
 
-  // Crear usuario lector  
+//   // Crear usuario lector  
 
-  await userManager.createReader('ticketViewer', 'viewerPassword');  
+//   await userManager.createReader('usuarioBasico', '12345');  
 
-  await userManager.close();  
-}  
+//   await userManager.close();  
+// }  
 
-// Ejecutar el script  
-main().catch(console.error);  
+// // Ejecutar el script  
+// main().catch(console.error);  

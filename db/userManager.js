@@ -14,7 +14,8 @@ class UserManager {
       MONGO_DB,  
     } = process.env;  
 
-    this.uri = `${MONGO_HOST}${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;  
+    this.uri = `${MONGO_HOST}${MONGO_USER}:${MONGO_PWD}@${MONGO_CLUSTER}:${MONGO_PORT}`;  
+
     this.client = new MongoClient(this.uri);  
     this.dbName = MONGO_DB;  
   }  
@@ -44,16 +45,7 @@ class UserManager {
     console.log(`Usuario administrador ${username} creado.`);  
   }  
 
-  async createReader(username, password) {  
-    await this.db.command({  
-      createUser: username,  
-      pwd: password,  
-      roles: [
-        { role: 'read', db: this.dbName }
-      ],  
-    });  
-    console.log(`Usuario lector ${username} creado.`);  
-  }  
+  
 }  
 
 export default UserManager;

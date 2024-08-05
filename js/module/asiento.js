@@ -12,7 +12,15 @@ export class AsientoManager {
         // No necesitas un constructor específico aquí
     }
 
-     async reservarAsientos(funcionId, asientosIds) { // Esta es la función principal
+    /**
+     * Reserva los asientos especificados para una función.
+     *
+     * @param {ObjectId} funcionId - El ID de la función para la que se reservarán los asientos.
+     * @param {ObjectId[]} asientosIds - Un array de ObjectIds que representan los asientos a reservar.
+     * @returns {Promise<boolean>} Una promesa que se resuelve con `true` si la reserva fue exitosa, o lanza un error en caso contrario.
+     * @throws {Error} Si los datos de reserva son inválidos o si algún asiento no está disponible.
+     */
+    async reservarAsientos(funcionId, asientosIds) {
         try {
             // Validar datos de entrada
             if (!funcionId || !asientosIds || !Array.isArray(asientosIds) || asientosIds.length === 0) {
@@ -50,9 +58,16 @@ export class AsientoManager {
             console.error('Error al reservar asientos:', error);
             throw error;
         }
-    } // Fin de la función reservarAsientos
+    } 
 
-
+    /**
+     * Cancela la reserva de los asientos especificados para una función.
+     *
+     * @param {ObjectId} funcionId - El ID de la función para la que se cancelarán las reservas.
+     * @param {ObjectId[]} asientosIds - Un array de ObjectIds que representan los asientos a cancelar.
+     * @returns {Promise<boolean>} Una promesa que se resuelve con `true` si la cancelación fue exitosa, o lanza un error en caso contrario.
+     * @throws {Error} Si los datos de cancelación son inválidos o si algún asiento no está reservado.
+     */
     async cancelarReserva(funcionId, asientosIds) {
         try {
             // Validar datos de entrada
@@ -65,7 +80,7 @@ export class AsientoManager {
                 // Verificar si el asiento está reservado en la función
                 const funcion = await coleccionFuncion.findOne({
                     _id: funcionId,
-                    asientos_ocupados: asientoId, // Verificar si el asiento está en la lista de ocupados
+                    asientos_ocupados: asientoId, 
                 });
                 if (!funcion) {
                     // Si el asiento no está ocupado en la función, no es necesario hacer nada
@@ -75,15 +90,12 @@ export class AsientoManager {
 
                 // Actualizar el estado del asiento a "disponible"
                 const resultadoActualizacion = await coleccionAsiento.updateOne(
-                    { _id: asientoId, estado: "reservado" }, // Solo actualizar si está reservado
+                    { _id: asientoId, estado: "reservado" }, 
                     { $set: { estado: "disponible" } }
                 );
 
                 if (resultadoActualizacion.modifiedCount === 0) {
-                    // El asiento no estaba en estado "reservado", lanzar un error o continuar
                     console.warn(`El asiento ${asientoId} no estaba en estado reservado`);
-                    // Opcionalmente, puedes lanzar un error aquí si quieres detener la cancelación:
-                    // throw new Error(`El asiento ${asientoId} no estaba en estado reservado`);
                 }
 
                 // Eliminar el asiento del array de asientos ocupados de la función
@@ -100,33 +112,43 @@ export class AsientoManager {
             console.error('Error al cancelar reserva de asientos:', error);
             throw error;
         }
-    }
-// fin de cancelar reserva 
-    
+    } 
+    // fin de cancelar reserva 
 
-    static async getSalaInfo(salaId = new ObjectId('66a6c202e3cfd0b8c74fe5a3')) { 
+
+    /**
+     * Obtiene información sobre una sala, incluyendo detalles de la sala, cantidad de asientos ocupados/reservados y cantidad de asientos disponibles.
+     *
+     * @param {ObjectId} [salaId] - El ID de la sala. Por defecto, se utiliza el ID '66a6c202e3cfd0b8c74fe5a3'.
+     * @returns {Promise<Object>} Un objeto con la información de la sala, incluyendo:
+     *   - `sala`: El documento de la sala encontrada.
+     *   - `asientosOcupados`: La cantidad de asientos ocupados o reservados en la sala.
+     *   - `asientosDisponibles`: La cantidad de asientos disponibles en la sala.
+     * @throws {Error} Si la sala no se encuentra o si ocurre un error al obtener la información.
+     */
+    async getAll(salaId = new ObjectId('66a6c202e3cfd0b8c74fe5a3')) { 
         try {
             const sala = await coleccionSala.findOne({ _id: salaId });
             if (!sala) {
-              throw new Error(`Sala con ID ${salaId} no encontrada`);
+                throw new Error(`Sala con ID ${salaId} no encontrada`);
             }
-      
-            const asientosOcupados = await coleccionAsiento.countDocuments({
-              sala_id: salaId,
-              estado: { $in: ["ocupado", "reservado"] }
+
+            const asientosOcupados = await coleccionAsiento.countDocuments({ 
+                sala_id: salaId, 
+                estado: { $in: ["ocupado", "reservado"] } 
             });
             const asientosDisponibles = sala.capacidad - asientosOcupados;
-      
+
             console.log('Información de la sala:');
             console.log(sala);
             console.log('Asientos ocupados o reservados:', asientosOcupados);
             console.log('Asientos disponibles:', asientosDisponibles);
-      
+
             return { sala, asientosOcupados, asientosDisponibles };
-      
-          } catch (error) {
+
+        } catch (error) {
             console.error('Error al obtener la información de la sala:', error);
-            throw error;
+            throw error; 
         }
     }
 }

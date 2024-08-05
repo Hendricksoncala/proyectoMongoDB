@@ -1,6 +1,22 @@
-MONGO_USER
-MONGO_PORT
-MONGO_PWD
-MONGO_HOST
-MONGO_CLUSTER
-MONGO_DB
+MONGO_HOST = "mongodb://"
+MONGO_USER = "mongo"
+MONGO_PWD = "gJXMZfPcCPQjzIoxfxtOPWwuRHfyHXXp"
+MONGO_CLUSTER = "viaduct.proxy.rlwy.net"
+MONGO_PORT = 52301
+MONGO_DB = "movis"
+
+
+admin:
+MONGO_HOST = "mongodb://"
+MONGO_USER = "Karen"
+MONGO_PWD = "campus2023"
+MONGO_CLUSTER = "viaduct.proxy.rlwy.net"
+MONGO_PORT = 52301
+MONGO_DB = "movis"
+
+MONGO_HOST = "mongodb://"
+MONGO_USER = "TrainerMiguel"
+MONGO_PWD = "campus2023"
+MONGO_CLUSTER = "viaduct.proxy.rlwy.net"
+MONGO_PORT = 52301
+MONGO_DB = "movis"
