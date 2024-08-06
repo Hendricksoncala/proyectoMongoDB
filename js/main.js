@@ -94,10 +94,10 @@ RESPUESTA:
 
 
 // // Crear un cliente
-// console.log("\n--- Crear un cliente ---");
-// createCliente()
-//   .then(info => console.log(info))
-//   .catch(console.error);
+console.log("\n--- Crear un cliente ---");
+createCliente()
+  .then(info => console.log(info))
+  .catch(console.error);
 
 // // Obtener un cliente por ID
 // console.log("\n--- Obtener un cliente ---");

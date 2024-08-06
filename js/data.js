@@ -97,12 +97,12 @@ export async function cancelarReservaAsientos() {
 *5 en adelante con todas las caracteristicas de roles definidos:
 
 */const newCliente = {
-  nombre: "pablito tudisimo",
-  email: "pabxx2@gmail.com",
-  telefono: "+1 354 865 5555",
+  nombre: "samuel sir",
+  email: "davidelpapu@gmail.com",
+  telefono: "+1 354 865 4444",
   tarjeta: false,
   tarjeta_id: null, 
-  tipoUsuario: "estandar",
+  tipoUsuario: "VIP",
   password: "campus2023" // Reemplaza con una contraseña hasheada
 };
   

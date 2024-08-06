@@ -317,3 +317,5 @@ Los puntos a evaluar serán los siguientes:
 - **25 puntos**: Se creó el repositorio, pero en su rama principal no se encuentra el proyecto general ,al igual que algún archivo en relación al proyecto.
 - **100 puntos**: Se creó exitosamente el repositorio, donde en su rama principal se encuentra el proyecto general y sus archivos en relación a ello, con evidencia de la participación del equipo completo de manera periódica.
 
+coneccion con la base de datos:
+mongodb://Karen:campus2023@viaduct.proxy.rlwy.net:52301/movis
