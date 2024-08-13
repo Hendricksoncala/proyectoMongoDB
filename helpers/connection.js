@@ -1,7 +1,7 @@
-import 'dotenv/config'
-import { MongoClient } from "mongodb";
 
-export class connect{
+const { MongoClient } = require("mongodb");
+
+ class connect{
     user;
     port;
     #pass;
@@ -62,3 +62,5 @@ export class connect{
        await this.conexion.close();
    }
 }
+
+module.exports = connect;

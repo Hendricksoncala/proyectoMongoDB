@@ -1,5 +1,5 @@
-import { connect } from "../../helpers/connection.js"
-import { ObjectId } from "mongodb";
+const connect = require("../../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
+const { ObjectId } = require( "mongodb");
 const conection = new connect 
 
 import * as z from "zod";

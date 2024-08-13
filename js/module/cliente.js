@@ -1,12 +1,13 @@
-import { ObjectId } from "mongodb";
-import { connect } from "../../helpers/connection.js";
+const { ObjectId } = require("mongodb");
+const connect = require("../../helpers/connection.js");
 
 const connection = new connect();
-const db = await connection.conexion.db('movis');
+const db =  connection.conexion.db('movis'); 
 const coleccionCliente = db.collection('cliente');
 
 
-export class ClienteManager {
+ class ClienteManager {
+  static instance;
     constructor() {
       // No necesitas un constructor específico si no hay datos predeterminados.
     }
@@ -207,3 +208,5 @@ export class ClienteManager {
       }
     }
   }
+
+  module.exports = ClienteManager; 

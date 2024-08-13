@@ -1,20 +1,19 @@
-import { connect } from "../helpers/connection.js"; // Asegúrate de que la ruta sea correcta
-import { TicketManager } from "./module/tickets.js";
-import { PeliculaManager } from "./module/pelicula.js";
-import { AsientoManager } from "./module/asiento.js";
-import { ClienteManager } from "./module/cliente.js";
-import { ObjectId } from "mongodb";
-
+const connect = require("../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
+const TicketManager = require("./module/tickets.js");
+const PeliculaManager = require("./module/pelicula.js");
+const AsientoManager = require("./module/asiento.js");
+const ClienteManager = require("./module/cliente.js");
+const { ObjectId } = require("mongodb"); 
 
 const connection = new connect();
-const db = await connection.conexion.db('movis');
+const db =  connection.conexion.db('movis');
 
-const coleccionAsiento = await db.collection('asiento');
-const coleccionTicket = await db.collection('ticket');
-const coleccionSala = await db.collection('sala');
-const coleccionCliente = await db.collection('cliente');
-const coleccionFuncion = await db.collection('funcion');
-const coleccionPelicula = await db.collection('pelicula')
+const coleccionAsiento =  db.collection('asiento');
+const coleccionTicket =  db.collection('ticket');
+const coleccionSala =  db.collection('sala');
+const coleccionCliente =  db.collection('cliente');
+const coleccionFuncion =  db.collection('funcion');
+const coleccionPelicula =  db.collection('pelicula')
 
 
 /* 
@@ -22,7 +21,7 @@ const coleccionPelicula = await db.collection('pelicula')
 en este caso devuelve un string y no un objeto porque el objeto
 no nos da la informacion que queremos ver completa
 */
-export async function getAllMovie() {
+ async function getAllMovie() {
     return await PeliculaManager.getAllMovie(); // Espera el resultado con await
 }
 
@@ -31,7 +30,7 @@ export async function getAllMovie() {
 
 */
 
-export async function getMovie(){
+ async function getMovie(){
     return await PeliculaManager.getMovie()
 }
 
@@ -39,7 +38,7 @@ export async function getMovie(){
  ** 2. API par comprar boletos:
  *Se esta creando el ticket, se esta permitiendo la compra de boletos 
  */
- export async function createTicket() {
+  async function createTicket() {
     try {
         const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8");
         const clienteId = new ObjectId("66a7053d49b83a018940f87b");
@@ -62,14 +61,14 @@ export async function getMovie(){
 
 
 // *2.2, verificar disponibilidad de los asientos
-export async function obtenerInformacionSala(salaId) { 
+ async function obtenerInformacionSala(salaId) { 
   const asientoManager = new AsientoManager();
   return await asientoManager.getAll(salaId); 
 }
 
 
 // *3 reservar asientos
-export async function reservarAsientos() {
+ async function reservarAsientos() {
     const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8"); 
     const asientosIds = [
       new ObjectId("66a815847a512a9f93195882"), 
@@ -81,7 +80,7 @@ export async function reservarAsientos() {
   }
 
 // *3.2 cancelar reserva de asientos
-export async function cancelarReservaAsientos() {
+ async function cancelarReservaAsientos() {
     const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8"); // ID de la función
     const asientosIds = [
       new ObjectId("66a815847a512a9f93195884"), 
@@ -107,7 +106,7 @@ export async function cancelarReservaAsientos() {
 };
   
   // Función para crear un cliente (API para Crear Usuario)
-  export async function createCliente() {
+   async function createCliente() {
     try {
       const clienteCreado = await ClienteManager.create(newCliente);
       console.log("Cliente creado:", clienteCreado);
@@ -119,7 +118,7 @@ export async function cancelarReservaAsientos() {
   }
   
   // Función para obtener un cliente por ID
-  export async function getCliente(id) {
+   async function getCliente(id) {
     try {
       const cliente = await ClienteManager.get({ _id: id });
       console.log("Cliente obtenido:", cliente);
@@ -131,7 +130,7 @@ export async function cancelarReservaAsientos() {
   }
   
 // Función para actualizar un cliente (API para Actualizar Rol de Usuario)
-export async function updateCliente(id, updateData) {
+ async function updateCliente(id, updateData) {
   try {
     // Validar que el id sea un ObjectId válido
     if (!ObjectId.isValid(id)) {
@@ -162,7 +161,7 @@ export async function updateCliente(id, updateData) {
 }
   
   // Función para obtener clientes por rol
-  export async function getClientesByRol(rol) {
+   async function getClientesByRol(rol) {
     try {
       const clientes = await ClienteManager.getByRol({ tipoUsuario: rol });
       console.log("Clientes por rol:", clientes);
@@ -174,7 +173,7 @@ export async function updateCliente(id, updateData) {
   }
   
   // Función para obtener todos los clientes
-  export async function getAllClientes() {
+   async function getAllClientes() {
     try {
       const clientes = await ClienteManager.getAll();
       console.log("Todos los clientes:", clientes);
@@ -184,3 +183,5 @@ export async function updateCliente(id, updateData) {
       throw error;
     }
   }
+
+module.exports = {getAllMovie,getMovie,createTicket,obtenerInformacionSala,reservarAsientos,cancelarReservaAsientos,createCliente,getCliente,updateCliente,getClientesByRol,getAllClientes}

@@ -1,12 +1,14 @@
-import { ObjectId } from "mongodb";
-import { connect } from "../../helpers/connection.js";
+const { ObjectId } = require( "mongodb");
+const connect = require("../../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
 
 const connection = new connect();
-const db = await connection.conexion.db('movis');
+const db =  connection.conexion.db('movis');
 const coleccionMovie = db.collection('pelicula');
 const coleccionFuncion = db.collection('funcion');
-export class PeliculaManager {
 
+ class PeliculaManager {
+
+    static instance;
     /**
      * Obtiene todas las películas disponibles en el catálogo, incluyendo sus horarios de proyección.
      *
@@ -62,3 +64,5 @@ export class PeliculaManager {
         }
     }
 }
+
+module.exports = PeliculaManager; 

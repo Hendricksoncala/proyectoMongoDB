@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";
-import { connect } from "../../helpers/connection.js";
+const { ObjectId } = require( "mongodb");
+const connect = require("../../helpers/connection");
 
 const connection = new connect();
-const db = await connection.conexion.db('movis');
+const db =  connection.conexion.db('movis');
 const coleccionAsiento = db.collection('asiento');
 const coleccionTicket = db.collection('ticket');
 const coleccionSala = db.collection('sala');
@@ -11,7 +11,8 @@ const coleccionFuncion = db.collection('funcion');
 
 
 //
-export class TicketManager {
+ class TicketManager {
+  static instance;
   constructor() {} // El constructor no necesita argumentos
 
   /**
@@ -95,3 +96,4 @@ export class TicketManager {
 }
 //BUSCAR DISPONIBILIDAD DE SALA:
 
+module.exports = TicketManager; 

@@ -1,13 +1,15 @@
-import { ObjectId } from "mongodb";
-import { connect } from "../../helpers/connection.js";
+const { ObjectId } = require( "mongodb");
+const connect = require("../../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
 
 const connection = new connect();
-const db = await connection.conexion.db('movis');
-const coleccionSala = await db.collection('sala');
-const coleccionAsiento = await db.collection('asiento');
-const coleccionFuncion = await db.collection('funcion');
+const db =  connection.conexion.db('movis');
 
-export class AsientoManager {
+const coleccionSala =  db.collection('sala');
+const coleccionAsiento =  db.collection('asiento');
+const coleccionFuncion =  db.collection('funcion');
+
+ class AsientoManager {
+    static instance;
     constructor() {
         // No necesitas un constructor específico aquí
     }
@@ -152,3 +154,6 @@ export class AsientoManager {
         }
     }
 }
+
+
+module.exports = AsientoManager; 

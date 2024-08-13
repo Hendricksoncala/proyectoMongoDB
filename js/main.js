@@ -1,21 +1,21 @@
-import { connect } from "../helpers/connection.js"; // Asegúrate de que la ruta sea correcta
-import { TicketManager } from "./module/tickets.js";
-import { PeliculaManager } from "./module/pelicula.js";
-import { AsientoManager } from "./module/asiento.js";
-import { ClienteManager } from "./module/cliente.js";
-import { ObjectId } from "mongodb";
+const connect = require("../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
+const TicketManager = require("./module/tickets.js");
+const PeliculaManager = require("./module/pelicula.js");
+const AsientoManager = require("./module/asiento.js");
+const ClienteManager = require("./module/cliente.js");
+const { ObjectId } = require("mongodb"); 
 
+const {getAllMovie,getMovie,createTicket,obtenerInformacionSala,reservarAsientos,cancelarReservaAsientos,createCliente,getCliente,updateCliente,getClientesByRol,getAllClientes} = require("./data.js")
 
-import { createCliente, getCliente, updateCliente, getClientesByRol, getAllClientes } from "./data.js";
 const connection = new connect();
-const db = await connection.conexion.db('movis');
+const db =  connection.conexion.db('movis');
 
-const coleccionAsiento = await db.collection('asiento');
-const coleccionTicket = await db.collection('ticket');
-const coleccionSala = await db.collection('sala');
-const coleccionCliente = await db.collection('cliente');
-const coleccionFuncion = await db.collection('funcion');
-const coleccionPelicula = await db.collection('pelicula')
+const coleccionAsiento =  db.collection('asiento');
+const coleccionTicket =  db.collection('ticket');
+const coleccionSala =  db.collection('sala');
+const coleccionCliente =  db.collection('cliente');
+const coleccionFuncion =  db.collection('funcion');
+const coleccionPelicula =  db.collection('pelicula')
 
 
 /* 
@@ -94,10 +94,10 @@ RESPUESTA:
 
 
 // // Crear un cliente
-console.log("\n--- Crear un cliente ---");
-createCliente()
-  .then(info => console.log(info))
-  .catch(console.error);
+// console.log("\n--- Crear un cliente ---");
+// createCliente()
+//   .then(info => console.log(info))
+//   .catch(console.error);
 
 // // Obtener un cliente por ID
 // console.log("\n--- Obtener un cliente ---");
