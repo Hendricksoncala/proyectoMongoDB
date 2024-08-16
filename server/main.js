@@ -1,4 +1,4 @@
-const connect = require("../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
+const connect = require("./helpers/connection.js"); // Asegúrate de que la ruta sea correcta
 const TicketManager = require("./module/tickets.js");
 const PeliculaManager = require("./module/pelicula.js");
 const AsientoManager = require("./module/asiento.js");

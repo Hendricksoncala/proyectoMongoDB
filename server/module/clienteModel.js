@@ -26,63 +26,69 @@ const coleccionCliente = db.collection('cliente');
      * @returns {Promise<InsertOneResult>} El resultado de la inserción del cliente en la base de datos.
      * @throws {Error} Si faltan datos obligatorios, el tipo de usuario no es válido o hay un error al crear el cliente en la base de datos o en MongoDB.
      */
-    static async create({
-      nombre,
-      email,
-      telefono,
-      tarjeta,
-      tarjeta_id,
-      tipoUsuario,
-      password
-    }) {
-      try {
-        // Validación de datos (puedes agregar lógica de validación más detallada aquí)
-        if (!nombre || !email || !telefono || tarjeta === undefined || tipoUsuario === undefined || !password) {
-          throw new Error('Faltan datos obligatorios para crear el cliente');
-        }
-  
-        // Asignar null a tarjeta_id si no tiene tarjeta
-        if (!tarjeta) {
-          tarjeta_id = null;
-        }
-  
-        const newCliente = {
-          nombre,
-          email,
-          telefono,
-          tarjeta,
-          tarjeta_id,
-          tipoUsuario
-        };
-  
-        // Crear el cliente en la colección "clientes"
-        let create = await coleccionCliente.insertOne(newCliente);
-  
-        // Asignar el rol correspondiente según el tipo de usuario
-        let rol;
-        if (tipoUsuario === 'estandar') {
-          rol = 'usuarioEstandar';
-        } else if (tipoUsuario === 'VIP') {
-          rol = 'usuarioVip';
-        } else if (tipoUsuario === 'administrador') {
-          rol = 'administrador'; 
-        } else {
-          throw new Error('Tipo de usuario no válido');
-        }
-  
-        // Crear el usuario en MongoDB y asignarle el rol
-        await db.command({
-          createUser: nombre,
-          pwd: String(password),
-          roles: [{ role: rol, db: "movis" }]
-        });
-  
-        return create;
-      } catch (error) {
-        console.error('Error al crear el cliente:', error.message);
-        throw error;
-      }
-    }
+    static async create({  
+      nombre,  
+      email,  
+      telefono,  
+      tarjeta,  
+      tarjeta_id,  
+      tipoUsuario,  
+      password  
+    }) {  
+      try {  
+        // Validación de datos  
+        if (!nombre || !email || !telefono || tarjeta === undefined || tipoUsuario === undefined || !password) {  
+          throw new Error('Faltan datos obligatorios para crear el cliente');  
+        }  
+
+        // Verificar si el usuario ya existe  
+        const existingUser = await coleccionCliente.findOne({ email });  
+        if (existingUser) {  
+          throw new Error('El usuario ya existe');  
+        }  
+
+        // Asignar null a tarjeta_id si no tiene tarjeta  
+        if (!tarjeta) {  
+          tarjeta_id = null;  
+        }  
+
+        const newCliente = {  
+          nombre,  
+          email,  
+          telefono,  
+          tarjeta,  
+          tarjeta_id,  
+          tipoUsuario  
+        };  
+
+        // Crear el cliente en la colección "clientes"  
+        let create = await coleccionCliente.insertOne(newCliente);  
+
+        // Asignar el rol correspondiente según el tipo de usuario  
+        let rol;  
+        if (tipoUsuario === 'estandar') {  
+          rol = 'usuarioEstandar';  
+        } else if (tipoUsuario === 'VIP') {  
+          rol = 'usuarioVip';  
+        } else if (tipoUsuario === 'administrador') {  
+          rol = 'administrador';   
+        } else {  
+          throw new Error('Tipo de usuario no válido');  
+        }  
+
+        // Crear el usuario en MongoDB y asignarle el rol  
+        await db.command({  
+          createUser: nombre,  
+          pwd: String(password),  
+          roles: [{ role: rol, db: "movis" }]  
+        });  
+
+        return create;  
+      } catch (error) {  
+        console.error('Error al crear el cliente:', error.message);  
+        throw error;  
+      }  
+    }  
   
     /**
      * Obtiene un cliente de la base de datos por su ID.
