@@ -60,36 +60,6 @@ no nos da la informacion que queremos ver completa
 }
 
 
-// *2.2, verificar disponibilidad de los asientos
- async function obtenerInformacionSala(salaId) { 
-  const asientoManager = new AsientoManager();
-  return await asientoManager.getAll(salaId); 
-}
-
-
-// *3 reservar asientos
- async function reservarAsientos() {
-    const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8"); 
-    const asientosIds = [
-      new ObjectId("66a815847a512a9f93195882"), 
-      new ObjectId("66a815847a512a9f93195887")  
-    ]; 
-  
-    const asientoManager = new AsientoManager(); // Crear instancia de AsientoManager
-    return await asientoManager.reservarAsientos(funcionId, asientosIds); // Llamar al método en la instancia
-  }
-
-// *3.2 cancelar reserva de asientos
- async function cancelarReservaAsientos() {
-    const funcionId = new ObjectId("66a6c2dce3cfd0b8c74fe5b8"); // ID de la función
-    const asientosIds = [
-      new ObjectId("66a815847a512a9f93195884"), 
-
-    ]; // IDs de los asientos a cancelar
-  
-    const asientoManager = new AsientoManager();
-    await asientoManager.cancelarReserva(funcionId, asientosIds);
-  }
 
 
 /* 
