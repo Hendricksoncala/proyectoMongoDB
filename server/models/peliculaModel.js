@@ -1,14 +1,13 @@
 const { ObjectId } = require( "mongodb");
-const connect = require("../../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
+const connect = require("../../helpers/connection.js");
 
 const connection = new connect();
 const db =  connection.conexion.db('movis');
 const coleccionMovie = db.collection('pelicula');
 const coleccionFuncion = db.collection('funcion');
 
- class PeliculaManager {
+class Pelicula {
 
-    static instance;
     /**
      * Obtiene todas las películas disponibles en el catálogo, incluyendo sus horarios de proyección.
      *
@@ -23,7 +22,7 @@ const coleccionFuncion = db.collection('funcion');
      *     - `hora`: La hora de la función en formato HH:mm.
      * @throws {Error} Si ocurre un error al obtener las películas o sus funciones.
      */
-    static async getAllMovie() {
+    static async getAll() {
         try {
             let queryMovie = await coleccionMovie.find({}).toArray();
 
@@ -44,25 +43,137 @@ const coleccionFuncion = db.collection('funcion');
     }
 
     /**
-     * Obtiene los detalles de una película específica por su nombre.
+     * Obtiene los detalles de una película específica por su ID.
      *
-     * @param {Object} params - Parámetros de la consulta.
-     * @param {string} params.nombre - El nombre de la película a buscar.
+     * @param {string} id - El ID de la película a buscar.
      * @returns {Promise<Object|null>} El documento de la película encontrada o null si no se encuentra.
      * @throws {Error} Si la película no se encuentra o si ocurre un error al buscarla.
      */
-    static async getMovie({ nombre } = { nombre: "Whiplash" }) {
+    static async getById(id) {
         try {
-            let query = await coleccionMovie.findOne({ nombre }, { nombre });
-            if (!query) {
-                throw new Error(`Película con nombre ${nombre} no encontrada`);
+            if (!ObjectId.isValid(id)) {
+                throw new Error('ID de película inválido');
             }
-            return query;
+
+            const pelicula = await coleccionMovie.findOne({ _id: new ObjectId(id) });
+            if (!pelicula) {
+                throw new Error(`Película con ID ${id} no encontrada`);
+            }
+            return pelicula;
         } catch (error) {
             console.error('Error al obtener la película:', error);
             throw error;
         }
     }
+
+    /**
+     * Obtiene los detalles de una película específica por su nombre.
+     *
+     * @param {string} nombre - El nombre de la película a buscar
+     * @returns {Promise<Object|null>} El documento de la película encontrada o null si no se encuentra.
+     * @throws {Error} Si la película no se encuentra o si ocurre un error al buscarla.
+     */
+    static async getByName(nombre) {
+        try {
+            const pelicula = await coleccionMovie.findOne({ nombre });
+            if (!pelicula) {
+                throw new Error(`Película con nombre ${nombre} no encontrada`);
+            }
+            return pelicula;
+        } catch (error) {
+            console.error('Error al obtener la película:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Crea una nueva película en la base de datos.
+     *
+     * @param {Object} peliculaData - Los datos de la película a crear.
+     * @param {string} peliculaData.nombre - El nombre de la película.
+     * @param {string} peliculaData.genero - El género de la película.
+     * @param {number} peliculaData.duracion - La duración de la película en minutos.
+     * @param {string} [peliculaData.sinopsis] - La sinopsis de la película (opcional).
+     * @param {string} [peliculaData.imagen] - La URL o ruta de la imagen de la película (opcional).
+     * @param {string} [peliculaData.trailer] - La URL del tráiler de la película (opcional).
+     * @param {Array} [peliculaData.reparto] - Un array con los actores y sus personajes (opcional).
+     * @returns {Promise<ObjectId>} El ID de la película creada.
+     * @throws {Error} Si ocurre un error al crear la película.
+     */
+    static async create(peliculaData) {
+        try {
+            // ... (Validaciones de peliculaData si es necesario)
+            const result = await coleccionPelicula.insertOne(peliculaData);
+            return result.insertedId; 
+        } catch (error) {
+            console.error('Error al crear la película:', error);
+            throw error; 
+        }
+    }
+
+    /**
+     * Actualiza los datos de una película existente en la base de datos.
+     *
+     * @param {string} id - El ID de la película a actualizar
+     * @param {Object} peliculaData - Los datos actualizados de la película
+     * @param {string} [peliculaData.nombre] - El nuevo nombre de la película (opcional).
+     * @param {string} [peliculaData.genero] - El nuevo género de la película (opcional).
+     * @param {number} [peliculaData.duracion] - La nueva duración de la película en minutos (opcional).
+     * @param {string} [peliculaData.sinopsis] - La nueva sinopsis de la película (opcional).
+     * @param {string} [peliculaData.imagen] - La nueva URL o ruta de la imagen de la película (opcional).
+     * @param {string} [peliculaData.trailer] - La nueva URL del tráiler de la película (opcional).
+     * @param {Array} [peliculaData.reparto] - Un nuevo array con los actores y sus personajes (opcional).
+     * @returns {Promise<boolean>} `true` si la actualización fue exitosa, lanza un error en caso contrario
+     * @throws {Error} Si la película no se encuentra o si ocurre un error al actualizarla
+     */
+    static async update(id, peliculaData) {
+        try {
+            if (!ObjectId.isValid(id)) {
+                throw new Error('ID de película inválido');
+            }
+
+            // ... (Validaciones de peliculaData si es necesario)
+            const result = await coleccionPelicula.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: peliculaData }
+            );
+
+            if (result.modifiedCount === 0) {
+                throw new Error(`Película con ID ${id} no encontrada`);
+            }
+
+            return true; 
+        } catch (error) {
+            console.error('Error al actualizar la película:', error);
+            throw error; 
+        }
+    }
+
+    /**
+     * Elimina una película de la base de datos
+     * 
+     * @param {string} id - El ID de la película a eliminar
+     * @returns {Promise<boolean>} `true` si la eliminación fue exitosa, lanza un error en caso contrario
+     * @throws {Error} Si la película no se encuentra o si ocurre un error al eliminarla
+     */
+    static async delete(id) {
+        try {
+            if (!ObjectId.isValid(id)) {
+                throw new Error('ID de película inválido');
+            }
+
+            const result = await coleccionPelicula.deleteOne({ _id: new ObjectId(id) });
+
+            if (result.deletedCount === 0) {
+                throw new Error(`Película con ID ${id} no encontrada`);
+            }
+
+            return true; 
+        } catch (error) {
+            console.error('Error al eliminar la película:', error);
+            throw error; 
+        }
+    }
 }
 
-module.exports = PeliculaManager; 
+module.exports = Pelicula;
