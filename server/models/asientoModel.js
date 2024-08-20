@@ -1,5 +1,5 @@
 const { ObjectId } = require( "mongodb");
-const connect = require("../../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
+const connect = require("../helpers/connection.js"); // Asegúrate de que la ruta sea correcta
 
 const connection = new connect();
 const db =  connection.conexion.db('movis');

@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "node --watch --env-file=.env js/main.js",
-    "dev": "node --watch --env-file=.env app.js"
-  },
+"scripts": {
+  "test": "node --watch --env-file=.env server/app.js",
+  "start": "node server/app.js" 
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

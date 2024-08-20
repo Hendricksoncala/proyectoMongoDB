@@ -48,11 +48,11 @@ const { MongoClient } = require("mongodb");
    }
 
    async #open(){
-       this.conexion = new MongoClient(`${this.getHost}${this.user}:${this.getPass}@${this.getCluster}:${this.port}/movis`);
-       await this.conexion.connect();
-
-       
-   }
+    const uri = `${this.getHost}${this.user}:${this.getPass}@${this.getCluster}:${this.port}/movis`; // Define la variable uri aquí
+    this.conexion = new MongoClient(uri);
+    console.log('URI de conexión:', uri); 
+    await this.conexion.connect();    
+}
 
 
    async reconnect(){

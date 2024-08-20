@@ -1,4 +1,4 @@
-const Pelicula = require('../models/peliculaModel'); // Asegúrate de que la ruta sea correcta
+const Pelicula = require('../models/peliculaModel');
 
 /**
  * Obtiene todas las películas disponibles en el catálogo, incluyendo sus horarios de proyección.
@@ -36,5 +36,37 @@ exports.obtenerDetallesPelicula = async (req, res) => {
             // Si es otro tipo de error, envía un error 500
             res.status(500).json({ error: error.message });
         }
+    }
+};
+
+//opciones creadas por si se necesitan crear o actulizar las peliculas, claro, tambien eliminarlas
+exports.crearPelicula = async (req, res) => {
+    try {
+        const peliculaData = req.body; 
+        const peliculaId = await Pelicula.create(peliculaData);
+        res.status(201).json({ _id: peliculaId, ...peliculaData }); 
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.actualizarPelicula = async (req, res) => {
+    try {
+        const peliculaId = req.params.id;
+        const peliculaData = req.body; 
+        await Pelicula.update(peliculaId, peliculaData);
+        res.status(200).json({ message: 'Película actualizada correctamente' });
+    } catch (error) {
+        res.status(404).json({ error: error.message }); 
+    }
+};
+
+exports.eliminarPelicula = async (req, res) => {
+    try {
+        const peliculaId = req.params.id;
+        await Pelicula.delete(peliculaId);
+        res.status(200).json({ message: 'Película eliminada correctamente' });
+    } catch (error) {
+        res.status(404).json({ error: error.message }); 
     }
 };

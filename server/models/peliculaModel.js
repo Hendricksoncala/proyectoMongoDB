@@ -1,10 +1,11 @@
-const { ObjectId } = require( "mongodb");
-const connect = require("../../helpers/connection.js");
+const { ObjectId } = require("mongodb");
+const connect = require("../helpers/connection.js");
 
 const connection = new connect();
 const db =  connection.conexion.db('movis');
 const coleccionMovie = db.collection('pelicula');
 const coleccionFuncion = db.collection('funcion');
+
 
 class Pelicula {
 
