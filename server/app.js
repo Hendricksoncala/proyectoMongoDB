@@ -17,11 +17,15 @@ const clienteRouter = require('./routers/clienteRouter');
 const peliculaRouter = require('./routers/peliculaRouter');
 const ticketRouter = require('./routers/ticketRouter');
 const asientoRouter = require('./routers/asientoRouter');
+const salaRouter = require('./routers/salaRouter');
+const funcionRouter = require('./routers/funcionRouter');
 
 app.use('/api/clientes', clienteRouter);
 app.use('/api/peliculas', peliculaRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/asientos', asientoRouter);
+app.use('/api/salas', salaRouter); 
+app.use('/api/funciones', funcionRouter);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;

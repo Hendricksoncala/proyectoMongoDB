@@ -82,7 +82,32 @@ const coleccionFuncion = db.collection('funcion');
       console.error('Error al crear el ticket:', error);
       throw error;
     }
+
+    
   }
+    /**
+   * Obtiene un ticket por su ID.
+   *
+   * @param {string} id - El ID del ticket a buscar.
+   * @returns {Promise<Object|null>} Una promesa que se resuelve con el ticket encontrado o null si no se encuentra.
+   * @throws {Error} Si el ID del ticket es inválido o si ocurre un error al buscar el ticket.
+   */
+    static async getById(id) {
+      try {
+        if (!ObjectId.isValid(id)) {
+          throw new Error('ID de ticket inválido');
+        }
+  
+        const ticket = await coleccionTicket.findOne({ _id: new ObjectId(id) });
+        if (!ticket) {
+          throw new Error(`Ticket con ID ${id} no encontrado`);
+        }
+        return ticket;
+      } catch (error) {
+        console.error('Error al obtener el ticket:', error);
+        throw error; 
+      }
+    }
 
   /**
    * Verifica si el cliente tiene una tarjeta VIP válida con el número especificado.

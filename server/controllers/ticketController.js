@@ -1,6 +1,7 @@
 const TicketManager = require('../models/ticketModel'); 
 const { ObjectId } = require("mongodb");
 const { validationResult } = require('express-validator'); 
+const { check } = require('express-validator');
 
 // ... (Otros métodos del controlador)
 
