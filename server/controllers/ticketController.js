@@ -1,21 +1,24 @@
-const TicketManager = require('../models/ticketsModel'); 
+const TicketManager = require('../models/ticketModel'); 
 const { ObjectId } = require("mongodb");
+const { validationResult } = require('express-validator'); 
 
-/**
- * Crea un nuevo ticket.
- *
- * @param {Object} req - El objeto de solicitud HTTP.
- * @param {Object} res - El objeto de respuesta HTTP.
- * @returns {Promise<void>} Envía una respuesta JSON con el ticket creado o un mensaje de error en caso de fallo.
- */
+// ... (Otros métodos del controlador)
+
 exports.crearTicket = async (req, res) => {
     try {
-        const { funcionId, clienteId, asientoIds, fechaCompra, metodoPago } = req.body;
+        // Validaciones con express-validator (ejemplo)
+        await check('funcionId').isMongoId().run(req);
+        await check('clienteId').isMongoId().run(req);
+        await check('asientoIds').isArray().run(req);
+        await check('fechaCompra').isISO8601().toDate().run(req);
+        await check('metodoPago').notEmpty().run(req);
 
-        // Validaciones (puedes agregar más validaciones según tus necesidades)
-        if (!funcionId || !clienteId || !asientoIds || !fechaCompra || !metodoPago) {
-            return res.status(400).json({ error: 'Faltan datos obligatorios para crear el ticket' });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
+
+        const { funcionId, clienteId, asientoIds, fechaCompra, metodoPago } = req.body;
 
         // Convertir IDs a ObjectId
         const funcionObjectId = new ObjectId(funcionId);
@@ -26,12 +29,39 @@ exports.crearTicket = async (req, res) => {
             funcionObjectId, 
             clienteObjectId, 
             asientoObjectIds, 
-            new Date(fechaCompra), 
+            fechaCompra, 
             metodoPago
         );
 
         res.status(201).json(ticket);
     } catch (error) {
+        if (error.message.includes('no existe') || error.message.includes('no disponible')) {
+            res.status(400).json({ error: error.message }); 
+        } else {
+            res.status(500).json({ error: error.message }); 
+        }
+    }
+};
+
+exports.obtenerTodosTickets = async (req, res) => {
+    try {
+        const tickets = await TicketManager.getAll(); 
+        res.status(200).json(tickets);
+    } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+
+exports.obtenerTicketPorId = async (req, res) => {
+    try {
+        const ticketId = req.params.id;
+        const ticket = await TicketManager.getById(ticketId); 
+        res.status(200).json(ticket);
+    } catch (error) {
+        if (error.message.includes('no encontrado')) {
+            res.status(404).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: error.message });
+        }
     }
 };
