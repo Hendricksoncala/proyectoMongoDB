@@ -84,7 +84,7 @@ exports.obtenerInformacionSala = async (req, res) => {
     try {
         const salaId = new ObjectId(req.params.salaId); 
 
-        // Validación del ID de la sala (puedes usar express-validator o una función auxiliar)
+        // Validación del ID de la sala
         if (!ObjectId.isValid(salaId)) {
             return res.status(400).json({ error: 'ID de sala inválido' });
         }
@@ -94,7 +94,7 @@ exports.obtenerInformacionSala = async (req, res) => {
         res.status(200).json(informacionSala);
     } catch (error) {
         if (error.message.includes('no encontrada')) {
-            res.status(404).json({ error: error.message }); // Sala no encontrada
+            res.status(404).json({ error: error.message }); 
         } else {
             res.status(500).json({ error: 'Error interno del servidor al obtener información de la sala' }); 
         }

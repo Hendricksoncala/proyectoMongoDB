@@ -1,5 +1,6 @@
-const { validationResult } = require('express-validator'); // Asegúrate de tener express-validator instalado
+const { validationResult } = require('express-validator');
 const ClienteManager = require('../models/clienteModel'); 
+const clienteValidator = require('../validators/clienteValidator');
 
 /**
  * Crea un nuevo cliente.
@@ -10,7 +11,9 @@ const ClienteManager = require('../models/clienteModel');
  */
 exports.crearCliente = async (req, res) => {
     try {
-        // Validar los datos de entrada usando express-validator (puedes definir tus propias reglas de validación)
+        // Aplicar las validaciones para crear un cliente
+        await Promise.all(clienteValidator.validarCrearCliente.map(validation => validation.run(req)));
+
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -20,7 +23,14 @@ exports.crearCliente = async (req, res) => {
         const clienteCreado = await ClienteManager.create(nuevoCliente);
         res.status(201).json(clienteCreado); 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        // Manejo de errores más específico
+        if (error.message === 'El usuario ya existe') {
+            res.status(409).json({ error: error.message }); // Conflicto, el usuario ya existe
+        } else if (error.message === 'Tipo de usuario no válido') {
+            res.status(400).json({ error: error.message }); // Bad Request, tipo de usuario inválido
+        } else {
+            res.status(500).json({ error: 'Error interno del servidor al crear el cliente' }); 
+        }
     }
 };
 
@@ -34,13 +44,19 @@ exports.crearCliente = async (req, res) => {
 exports.obtenerClientePorId = async (req, res) => {
     try {
         const clienteId = req.params.id;
+
+        // Validar que el id sea un ObjectId válido
+        if (!ObjectId.isValid(clienteId)) {
+            return res.status(400).json({ error: 'ID de cliente inválido' });
+        }
+
         const cliente = await ClienteManager.get({ _id: clienteId });
         res.status(200).json(cliente);
     } catch (error) {
         if (error.message.includes('no encontrado')) {
             res.status(404).json({ error: error.message });
         } else {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: 'Error interno del servidor al obtener el cliente' });
         }
     }
 };
@@ -57,12 +73,18 @@ exports.actualizarCliente = async (req, res) => {
         const clienteId = req.params.id;
         const updateData = req.body;
 
-        // Validar que el id sea un ObjectId válido (puedes usar express-validator o una función auxiliar)
+        // Validar que el id sea un ObjectId válido
         if (!ObjectId.isValid(clienteId)) {
             return res.status(400).json({ error: 'ID de cliente inválido' });
         }
 
-        // ... (Otras validaciones de updateData si es necesario)
+        // Aplicar las validaciones para actualizar un cliente
+        await Promise.all(clienteValidator.validarActualizarCliente.map(validation => validation.run(req)));
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
         const resultado = await ClienteManager.update({ _id: clienteId, ...updateData });
         res.status(200).json({ message: 'Cliente actualizado correctamente' });
@@ -83,7 +105,7 @@ exports.obtenerTodosClientes = async (req, res) => {
         const clientes = await ClienteManager.getAll();
         res.status(200).json(clientes);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Error interno del servidor al obtener los clientes' });
     }
 };
 

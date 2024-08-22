@@ -1,4 +1,4 @@
-const { check, body } = require('express-validator');
+const { body } = require('express-validator');
 
 exports.validarCrearFuncion = [
     body('peliculaId').notEmpty().withMessage('El ID de la película es obligatorio').isMongoId().withMessage('El ID de la película debe ser un ObjectId válido'),

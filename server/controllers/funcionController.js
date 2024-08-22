@@ -99,7 +99,11 @@ exports.actualizarFuncion = async (req, res) => {
         const resultado = await Funcion.update(funcionId, funcionData);
         res.status(200).json({ message: 'Función actualizada correctamente' });
     } catch (error) {
-        res.status(404).json({ error: error.message }); 
+        if (error.message.includes('no encontrada')) {
+            res.status(404).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Error interno del servidor al actualizar la función' });
+        }
     }
 };
 
@@ -122,6 +126,10 @@ exports.eliminarFuncion = async (req, res) => {
         await Funcion.delete(funcionId);
         res.status(200).json({ message: 'Función eliminada correctamente' });
     } catch (error) {
-        res.status(404).json({ error: error.message }); 
+        if (error.message.includes('no encontrada')) {
+            res.status(404).json({ error: error.message });
+        } else {
+            res.status(500).json({ error: 'Error interno del servidor al eliminar la función' });
+        }
     }
 };
