@@ -6,6 +6,7 @@ const salaController = require('../controllers/salaController');
 router.get('/', salaController.obtenerTodasSalas); 
 router.get('/:id', salaController.obtenerSalaPorId);
 router.post('/', salaController.crearSala);
-// ... otras rutas para salas (actualizar, eliminar, etc.)
+router.put('/:id', salaController.actualizarSala);
+router.delete('/:id', salaController.eliminarSala);
 
 module.exports = router;
