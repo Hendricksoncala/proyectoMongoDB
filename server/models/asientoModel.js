@@ -41,7 +41,7 @@ const coleccionFuncion =  db.collection('funcion');
                 // Verificar si el asiento está disponible en general
                 const resultadoActualizacion = await coleccionAsiento.updateOne(
                     { _id: asientoId, estado: "disponible" }, 
-                    { $set: { estado: "reservado" } }
+                    { $set: { estado: "reservado", fechaReserva: new Date() } }
                 );
                 if (resultadoActualizacion.modifiedCount === 0) {
                     throw new Error(`El asiento ${asientoId} no está disponible para reservar`);
@@ -151,6 +151,37 @@ const coleccionFuncion =  db.collection('funcion');
         } catch (error) {
             console.error('Error al obtener la información de la sala:', error);
             throw error; 
+        }
+    }
+
+    static async liberarAsientosExpirados() {
+        try {
+            const fechaExpiracion = new Date();
+            fechaExpiracion.setMinutes(fechaExpiracion.getMinutes() - 15); // 15 minutos de tiempo de expiración
+
+            const asientosExpirados = await coleccionAsiento.find({
+                estado: "reservado",
+                fechaReserva: { $lt: fechaExpiracion }
+            }).toArray();
+
+            for (const asiento of asientosExpirados) {
+                // Actualizar el estado del asiento a "disponible"
+                await coleccionAsiento.updateOne(
+                    { _id: asiento._id },
+                    { $set: { estado: "disponible" }, $unset: { fechaReserva: "" } }
+                );
+
+                // Eliminar el asiento del array de asientos ocupados de la función
+                await coleccionFuncion.updateOne(
+                    { _id: asiento.funcion_id },
+                    { $pull: { asientos_ocupados: asiento._id } }
+                );
+            }
+
+            console.log("Asientos expirados liberados correctamente");
+        } catch (error) {
+            console.error('Error al liberar asientos expirados:', error);
+            // Puedes manejar el error aquí o lanzar una excepción para que sea capturada a nivel de aplicación
         }
     }
 }

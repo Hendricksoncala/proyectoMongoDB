@@ -1,5 +1,7 @@
 const Funcion = require('../models/funcionModel');
 const { ObjectId } = require("mongodb");
+const { validationResult } = require('express-validator');
+const funcionValidator = require('../validators/funcionValidator');
 
 /**
  * Obtiene todas las funciones.
@@ -13,7 +15,7 @@ exports.obtenerTodasFunciones = async (req, res) => {
         const funciones = await Funcion.getAll();
         res.status(200).json(funciones);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Error interno del servidor al obtener las funciones' });
     }
 };
 
@@ -27,13 +29,19 @@ exports.obtenerTodasFunciones = async (req, res) => {
 exports.obtenerFuncionPorId = async (req, res) => {
     try {
         const funcionId = req.params.id;
+
+        // Validar que el id sea un ObjectId válido
+        if (!ObjectId.isValid(funcionId)) {
+            return res.status(400).json({ error: 'ID de función inválido' });
+        }
+
         const funcion = await Funcion.getById(funcionId);
         res.status(200).json(funcion);
     } catch (error) {
         if (error.message.includes('no encontrada')) {
             res.status(404).json({ error: error.message });
         } else {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: 'Error interno del servidor al obtener la función' });
         }
     }
 };
@@ -47,24 +55,73 @@ exports.obtenerFuncionPorId = async (req, res) => {
  */
 exports.crearFuncion = async (req, res) => {
     try {
-        const funcionData = req.body; 
+        // Aplicar las validaciones para crear una función
+        await Promise.all(funcionValidator.validarCrearFuncion.map(validation => validation.run(req)));
 
-        // Validaciones (puedes agregar más validaciones según tus necesidades)
-        if (!funcionData.peliculaId || !funcionData.salaId || !funcionData.fecha || !funcionData.hora || !funcionData.precio) {
-            return res.status(400).json({ error: 'Faltan datos obligatorios para crear la función' });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
 
+        const funcionData = req.body; 
         const funcionId = await Funcion.create(funcionData);
         res.status(201).json({ _id: funcionId });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Error interno del servidor al crear la función' });
     }
 };
 
+/**
+ * Actualiza los datos de una función existente.
+ *
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ * @returns {Promise<void>} Envía una respuesta JSON indicando el éxito de la actualización o un mensaje de error en caso de fallo.
+ */
+exports.actualizarFuncion = async (req, res) => {
+    try {
+        const funcionId = req.params.id;
+        const funcionData = req.body; 
 
+        // Validaciones 
+        if (!ObjectId.isValid(funcionId)) {
+            return res.status(400).json({ error: 'ID de función inválido' });
+        }
 
-// exports.obtenerFuncionesPorNombre = async (req, res) => {
-//     try{
-//         const funcionName = req.params.name
-//     }
-// }
+        // Aplicar las validaciones para actualizar una función
+        await Promise.all(funcionValidator.validarActualizarFuncion.map(validation => validation.run(req)));
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const resultado = await Funcion.update(funcionId, funcionData);
+        res.status(200).json({ message: 'Función actualizada correctamente' });
+    } catch (error) {
+        res.status(404).json({ error: error.message }); 
+    }
+};
+
+/**
+ * Elimina una función.
+ *
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ * @returns {Promise<void>} Envía una respuesta JSON indicando el éxito de la eliminación o un mensaje de error en caso de fallo.
+ */
+exports.eliminarFuncion = async (req, res) => {
+    try {
+        const funcionId = req.params.id;
+
+        // Validaciones 
+        if (!ObjectId.isValid(funcionId)) {
+            return res.status(400).json({ error: 'ID de función inválido' });
+        }
+
+        await Funcion.delete(funcionId);
+        res.status(200).json({ message: 'Función eliminada correctamente' });
+    } catch (error) {
+        res.status(404).json({ error: error.message }); 
+    }
+};
