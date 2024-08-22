@@ -8,5 +8,6 @@ router.get('/:id', peliculaController.obtenerDetallesPelicula);
 router.post('/', peliculaController.crearPelicula);
 router.put('/:id', peliculaController.actualizarPelicula);
 router.delete('/:id', peliculaController.eliminarPelicula);
+router.get('/buscar/:nombre', peliculaController.buscarPeliculasPorNombre);
 
 module.exports = router;

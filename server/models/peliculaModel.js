@@ -3,7 +3,7 @@ const connect = require("../helpers/connection.js");
 
 const connection = new connect();
 const db =  connection.conexion.db('movis');
-const coleccionMovie = db.collection('pelicula');
+const coleccionPelicula = db.collection('pelicula');
 const coleccionFuncion = db.collection('funcion');
 
 
@@ -76,7 +76,9 @@ class Pelicula {
      */
     static async getByName(nombre) {
         try {
-            const pelicula = await coleccionMovie.findOne({ nombre });
+            console.log('Buscando película por nombre:', nombre); 
+            const pelicula = await coleccionPelicula.findOne({ nombre });
+            console.log('Película encontrada:', pelicula); 
             if (!pelicula) {
                 throw new Error(`Película con nombre ${nombre} no encontrada`);
             }
@@ -175,6 +177,9 @@ class Pelicula {
             throw error; 
         }
     }
+
+    
+
 }
 
 module.exports = Pelicula;

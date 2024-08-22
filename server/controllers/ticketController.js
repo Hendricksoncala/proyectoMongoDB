@@ -45,24 +45,25 @@ exports.crearTicket = async (req, res) => {
 };
 
 exports.obtenerTodosTickets = async (req, res) => {
-    try {
-        const tickets = await TicketManager.getAll(); 
-        res.status(200).json(tickets);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const tickets = await TicketManager.getAll(); 
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 exports.obtenerTicketPorId = async (req, res) => {
-    try {
-        const ticketId = req.params.id;
-        const ticket = await TicketManager.getById(ticketId); 
-        res.status(200).json(ticket);
-    } catch (error) {
-        if (error.message.includes('no encontrado')) {
-            res.status(404).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: error.message });
-        }
+  try {
+    const ticketId = req.params.id;
+    const ticket = await TicketManager.getById(ticketId); 
+    res.status(200).json(ticket);
+  } catch (error) {
+    if (error.message.includes('no encontrado')) {
+      res.status(404).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: error.message });
     }
+  }
+
 };

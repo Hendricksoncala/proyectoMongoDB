@@ -70,3 +70,36 @@ exports.eliminarPelicula = async (req, res) => {
         res.status(404).json({ error: error.message }); 
     }
 };
+
+
+/**
+ * Busca películas por nombre.
+ *
+ * @param {Object} req - El objeto de solicitud HTTP.
+ * @param {Object} res - El objeto de respuesta HTTP.
+ * @returns {Promise<void>} Envía una respuesta JSON con la lista de películas encontradas o un mensaje de error en caso de fallo.
+ */
+exports.buscarPeliculasPorNombre = async (req, res) => {
+    console.log(req.params)
+    try {
+        const nombre = req.params.nombre; // Obtén el nombre de la película de los parámetros de consulta
+
+        // Validación básica (puedes agregar más validaciones si es necesario)
+        if (!nombre) {
+            return res.status(400).json({ error: 'El parámetro "nombre" es obligatorio' });
+        }
+
+        const peliculas = await Pelicula.getByName(nombre);
+
+        // Si no se encontraron películas, envía un mensaje informativo
+        if (peliculas.length === 0) {
+            return res.status(200).json({ message: 'No se encontraron películas con ese nombre' });
+        }
+
+        // Mapear las películas a DTOs (si estás usando PeliculaDTO)
+        const peliculasDTO = peliculas.map(pelicula => new PeliculaDTO(pelicula)); 
+        res.status(200).json(peliculasDTO);
+    } catch (error) {
+        res.status(500).json({ error: 'Error interno del servidor al buscar películas' });
+    }
+};
