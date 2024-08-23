@@ -1,0 +1,25 @@
+/* index.css o Header.css */
+header {
+  background-color: #222; /* Color de fondo oscuro */
+  color: white; /* Color de texto blanco */
+  padding: 1rem; /* Espacio interno */
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos horizontalmente */
+  align-items: center; /* Alinea los elementos verticalmente al centro */
+}
+
+.header-content p {
+  margin: 0; /* Elimina márgenes predeterminados */
+  font-size: 1.2rem; /* Ajusta el tamaño de fuente según tus necesidades */
+}
+
+.notification-icon {
+  /* Estilos para el icono de notificación */
+  width: 30px; /* Ajusta el tamaño según el icono que uses */
+  height: 30px;
+  background-color: #444; /* Color de fondo para el icono */
+  border-radius: 50%; /* Forma circular */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

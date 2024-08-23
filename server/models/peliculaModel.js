@@ -25,7 +25,7 @@ class Pelicula {
      */
     static async getAll() {
         try {
-            let queryMovie = await coleccionMovie.find({}).toArray();
+            let queryMovie = await coleccionPelicula.find({}).toArray();
 
             for (let movie of queryMovie) {
                 let funciones = await coleccionFuncion.find({ pelicula_id: movie._id }).toArray();
@@ -56,7 +56,7 @@ class Pelicula {
                 throw new Error('ID de película inválido');
             }
 
-            const pelicula = await coleccionMovie.findOne({ _id: new ObjectId(id) });
+            const pelicula = await coleccionPelicula.findOne({ _id: new ObjectId(id) });
             if (!pelicula) {
                 throw new Error(`Película con ID ${id} no encontrada`);
             }

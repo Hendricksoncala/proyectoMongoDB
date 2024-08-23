@@ -102,4 +102,45 @@ exports.buscarPeliculasPorNombre = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Error interno del servidor al buscar películas' });
     }
+
 };
+
+exports.obtenerPeliculasEnCartelera = async (req, res) => {
+    try {
+        const fechaActual = new Date();
+
+        const funciones = await Funcion.find({
+            "horario.fecha": {
+                $gte: fechaActual.toISOString().split('T')[0]
+            }
+        });
+    
+        const peliculasIds = [...new Set(funciones.map(funcion => funcion.peliculaId))]; 
+
+        const peliculas = await Pelicula.find({ _id: { $in: peliculasIds } });
+        res.json(peliculas);
+
+
+    } catch(error){
+        res.status(500).json({ error: 'Error al obtener peliculas en cartelera' });
+    }
+}
+
+exports.obtenerPeliculasProximamente = async (req, res) => {
+    try {
+        const fechaActual = new Date();
+        const funciones = await Funcion.find({
+            "horario.fecha": {
+                $gt: fechaActual.toISOString().split('T')[0]
+            }
+        });
+
+        const peliculasIds = [...new Set(funciones.map(funcion => funcion.peliculaId))]; 
+
+        const peliculas = await Pelicula.find({ _id: { $in: peliculasIds } });
+        res.json(peliculas);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener peliculas proximamente' });
+    }
+    
+}

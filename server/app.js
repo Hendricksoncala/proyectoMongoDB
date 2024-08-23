@@ -1,8 +1,16 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 // Configuración de middlewares 
 app.use(express.json()); 
+
+// Configuración de CORS antes de las rutas
+app.use(cors({
+  origin: 'http://localhost:5173', // Permite solicitudes solo desde este origen
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Permite estos métodos HTTP
+  allowedHeaders: ['Content-Type', 'Authorization'] // Permite estos encabezados
+}));
 
 // Conexión a la base de datos 
 const Connect = require("./helpers/connection.js");
