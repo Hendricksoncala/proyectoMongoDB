@@ -1,4 +1,5 @@
 const Pelicula = require('../models/peliculaModel');
+const Funcion = require('../models/funcionModel');
 
 /**
  * Obtiene todas las películas disponibles en el catálogo, incluyendo sus horarios de proyección.
@@ -107,40 +108,56 @@ exports.buscarPeliculasPorNombre = async (req, res) => {
 
 exports.obtenerPeliculasEnCartelera = async (req, res) => {
     try {
-        const fechaActual = new Date();
+    const fechaActual = new Date();
 
-        const funciones = await Funcion.find({
-            "horario.fecha": {
-                $gte: fechaActual.toISOString().split('T')[0]
-            }
-        });
-    
-        const peliculasIds = [...new Set(funciones.map(funcion => funcion.peliculaId))]; 
+    const funciones = await Funcion.find({ // Llama al método find en el modelo Funcion
+      "horario.fecha": { 
+        $gte: fechaActual
+        
+      }
 
-        const peliculas = await Pelicula.find({ _id: { $in: peliculasIds } });
-        res.json(peliculas);
+      
+    });
+    console.log(funciones);
+        
+    const peliculasIds = [...new Set(funciones.map(funcion => funcion.pelicula_id))];
+
+    const peliculas = await Pelicula.find({ _id: { $in: peliculasIds } });
 
 
-    } catch(error){
-        res.status(500).json({ error: 'Error al obtener peliculas en cartelera' });
-    }
-}
+    res.json(peliculas);
 
-exports.obtenerPeliculasProximamente = async (req, res) => {
-    try {
-        const fechaActual = new Date();
-        const funciones = await Funcion.find({
-            "horario.fecha": {
-                $gt: fechaActual.toISOString().split('T')[0]
-            }
-        });
-
-        const peliculasIds = [...new Set(funciones.map(funcion => funcion.peliculaId))]; 
-
-        const peliculas = await Pelicula.find({ _id: { $in: peliculasIds } });
-        res.json(peliculas);
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener peliculas proximamente' });
+      console.error('Error al obtener películas en cartelera:', error); // Registrar detalles del error
+      res.status(500).json({ error: 'Error al obtener películas en cartelera' });
     }
-    
-}
+  };
+
+  exports.obtenerPeliculasProximamente = async (req, res) => {
+    try {
+    const fechaActual = new Date();
+
+    fechaActual.setDate(fechaActual.getDate() + 7);
+
+    const funciones = await Funcion.find({ // Llama al método find en el modelo Funcion
+      "horario.fecha": { 
+        $gte: fechaActual
+        
+      }
+
+      
+    });
+    console.log(funciones);
+        
+    const peliculasIds = [...new Set(funciones.map(funcion => funcion.pelicula_id))];
+
+    const peliculas = await Pelicula.find({ _id: { $in: peliculasIds } });
+
+
+    res.json(peliculas);
+
+    } catch (error) {
+      console.error('Error al obtener películas en cartelera:', error); // Registrar detalles del error
+      res.status(500).json({ error: 'Error al obtener películas en cartelera' });
+    }
+  };

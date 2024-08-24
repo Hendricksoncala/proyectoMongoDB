@@ -178,6 +178,15 @@ class Pelicula {
         }
     }
 
+    static async find(query) {
+        try {
+          const peliculas = await coleccionPelicula.find(query).toArray();
+          return peliculas; 
+        } catch (error) {
+          throw new Error('Error al buscar funciones en la base de datos'); 
+        }
+      }
+
     
 
 }

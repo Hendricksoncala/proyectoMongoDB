@@ -9,7 +9,7 @@ router.post('/', peliculaController.crearPelicula);
 router.put('/:id', peliculaController.actualizarPelicula);
 router.delete('/:id', peliculaController.eliminarPelicula);
 router.get('/buscar/:nombre', peliculaController.buscarPeliculasPorNombre);
-router.get('/en_cartelera', peliculaController.obtenerPeliculasEnCartelera);
-router.get('/proximamente', peliculaController.obtenerPeliculasProximamente);
+router.get('/movis/display', peliculaController.obtenerPeliculasEnCartelera);
+router.get('/movis/soon', peliculaController.obtenerPeliculasProximamente);
 
 module.exports = router;

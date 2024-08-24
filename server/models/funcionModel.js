@@ -102,6 +102,16 @@ class Funcion {
         }
     }
 
+    static async find(query) {
+        try {
+          const funciones = await coleccionFuncion.find(query).toArray();
+          console.log(funciones)
+          return funciones; 
+        } catch (error) {
+          throw new Error('Error al buscar funciones en la base de datos'); 
+        }
+      }
+
     // ... (Otros métodos para actualizar y eliminar funciones)
 }
 

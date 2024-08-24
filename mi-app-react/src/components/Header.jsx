@@ -1,6 +1,8 @@
 import React from 'react'; 
 import { FaBell } from 'react-icons/fa'; // Si usas React Icons
 
+
+
 function Header() {
   return (
     <header>
@@ -8,7 +10,7 @@ function Header() {
         <p>Hi, Ferrucio Tuccine!</p>
         <div className="notification-icon">
           {/* Usando Font Awesome */}
-          <FontAwesomeIcon icon="bell" /> 
+          <i class="fa-solid fa-bell"></i>
 
           {/* O usando React Icons */}
           {/* <FaBell /> */}
