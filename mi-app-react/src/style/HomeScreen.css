@@ -1,0 +1,43 @@
+/* index.css o HomeScreen.css */
+
+/* Estilos generales para la pantalla */
+.home-screen {
+    padding: 1rem; /* Espacio interno */
+  }
+  
+  /* Estilos para las secciones */
+  .now-playing, .coming-soon {
+    margin-bottom: 2rem; /* Espacio entre secciones */
+  }
+  
+  .now-playing h2, .coming-soon h2 {
+    font-size: 1.5rem; /* Ajusta el tamaño de fuente según tus necesidades */
+    margin-bottom: 1rem;
+  }
+  
+  /* Estilos para el carrusel */
+  .movie-carousel {
+    /* Ajusta estos estilos según la biblioteca de carrusel que estés utilizando */
+    width: 100%;
+    overflow: hidden; 
+  }
+  
+  /* Estilos para las tarjetas de películas */
+  .movie-card {
+    /* Ajusta estos estilos según el diseño de tus tarjetas */
+    width: 250px; /* O el ancho que desees */
+    margin: 0 0.5rem; /* Espacio entre tarjetas */
+  }
+  
+  .movie-card img {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Estilos para los enlaces "See all" */
+  .see-all {
+    display: block;
+    text-align: right;
+    color: #007bff; /* Color azul para el enlace */
+    text-decoration: none;
+  }

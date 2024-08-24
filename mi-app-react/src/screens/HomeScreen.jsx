@@ -3,7 +3,9 @@ import axios from 'axios'; //
 import SearchBar from '../SearchBar';
 import MovieCard from '../components/MovieCard';
 import Header from '../components/Header'; 
-import api from '../apiService'; 
+import api from '../apiService'
+import MovieCarousel from '../components/MovieCarousel';
+
 
 function HomeScreen() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
@@ -14,6 +16,7 @@ function HomeScreen() {
     axios.get('http://localhost:3000/api/peliculas/en_cartelera') // Asegúrate de que la ruta sea correcta
       .then(response => {
         setNowPlayingMovies(response.data);
+        console.log('peliculas en cartelera')
       })
       .catch(error => {
         console.error('Error al obtener películas en cartelera:', error);
@@ -29,28 +32,31 @@ function HomeScreen() {
       });
   }, []); 
 
-
   return (
     <div>
-      {/* ... */}
+      <Header /> {/* Agrega el componente Header */}
+      <SearchBar />
 
-      <h2>Películas en cartelera</h2>
-      <div>
-        {nowPlayingMovies.map(movie => (
-          <MovieCard key={movie._id} movie={movie} /> 
-        ))}
-      </div>
+      <section className="now-playing"> {/* Sección "Now Playing" */}
+        <h2>Películas en cartelera</h2>
+        <div className="movie-carousel"> {/* Contenedor para el carrusel */}
+          <MovieCarousel movies={nowPlayingMovies} /> 
+        </div>
+        <a href="#" className="see-all">See all</a> {/* Enlace "See all" */}
+      </section>
 
-      <h2>Próximamente</h2>
-      <div>
-        {comingSoonMovies.map(movie => (
-          <MovieCard key={movie._id} movie={movie} /> 
-        ))}
-      </div>
+      <section className="coming-soon"> {/* Sección "Coming Soon" */}
+        <h2>Próximamente</h2>
+        <div className="movie-card"> {/* Contenedor para la tarjeta de película */}
+          {comingSoonMovies.length > 0 && ( // Verifica si hay películas próximamente
+            <MovieCard key={comingSoonMovies[0]._id} movie={comingSoonMovies[0]} />
+          )}
+        </div>
+        <a href="#" className="see-all">See all</a> 
+      </section>
 
-      {/* ... */}
+      {/* ... (puedes agregar la barra de navegación inferior aquí) */}
     </div>
   );
-
 }
 export default HomeScreen;
