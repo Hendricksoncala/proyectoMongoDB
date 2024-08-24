@@ -13,7 +13,7 @@ function HomeScreen() {
 
   useEffect(() => {
     // Obtener películas en cartelera
-    axios.get('http://localhost:3000/api/peliculas/en_cartelera') // Asegúrate de que la ruta sea correcta
+    axios.get('http://localhost:3000/api/peliculas/movis/display') // Asegúrate de que la ruta sea correcta
       .then(response => {
         setNowPlayingMovies(response.data);
         console.log('peliculas en cartelera')
@@ -23,7 +23,7 @@ function HomeScreen() {
       });
 
     // Obtener películas próximamente
-    axios.get('http://localhost:3000/api/peliculas/proximamente') // Asegúrate de que la ruta sea correcta
+    axios.get('http://localhost:3000/api/peliculas/movis/soon') // Asegúrate de que la ruta sea correcta
       .then(response => {
         setComingSoonMovies(response.data);
       })
