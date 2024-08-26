@@ -3,14 +3,12 @@ import axios from 'axios'; //
 import SearchBar from '../SearchBar';
 import MovieCard from '../components/MovieCard';
 import Header from '../components/Header'; 
-import api from '../apiService'
+import Footer from '../components/Footer'; 
 import MovieCarousel from '../components/MovieCarousel';
-
 
 function HomeScreen() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [comingSoonMovies, setComingSoonMovies] = useState([]);
-
   useEffect(() => {
     // Obtener películas en cartelera
     axios.get('http://localhost:3000/api/peliculas/movis/display') // Asegúrate de que la ruta sea correcta
@@ -54,7 +52,7 @@ function HomeScreen() {
         </div>
         <a href="#" className="see-all">See all</a> 
       </section>
-
+        <Footer/>
       {/* ... (puedes agregar la barra de navegación inferior aquí) */}
     </div>
   );

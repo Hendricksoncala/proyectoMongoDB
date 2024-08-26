@@ -1,0 +1,22 @@
+.movie-card {
+    border-radius: 10px; /* Bordes redondeados */
+    overflow: hidden; /* Evita que el contenido se desborde */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  }
+  
+  .movie-card img {
+    width: 100%;
+    height: 200px; /* O la altura que desees */
+    object-fit: cover; /* Ajusta la imagen para cubrir el contenedor */
+  }
+  
+  .movie-card h2 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+  
+  .movie-card p {
+    font-size: 0.9rem;
+    color: #666; /* Color de texto gris */
+    margin: 0;
+  }

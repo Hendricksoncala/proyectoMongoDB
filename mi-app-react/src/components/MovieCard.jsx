@@ -2,7 +2,7 @@ import React from 'react';
 
 function MovieCard({ movie }) {
   return (
-    <div>
+    <div className=''>
       <img src={movie.imagen} alt={movie.nombre} />
       <h2>{movie.nombre}</h2>
       <p>Género: {movie.genero}</p>

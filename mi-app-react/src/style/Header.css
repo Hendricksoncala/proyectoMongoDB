@@ -1,25 +1,78 @@
-/* index.css o Header.css */
-header {
-  background-color: #222; /* Color de fondo oscuro */
-  color: white; /* Color de texto blanco */
-  padding: 1rem; /* Espacio interno */
-  display: flex;
-  justify-content: space-between; /* Distribuye los elementos horizontalmente */
-  align-items: center; /* Alinea los elementos verticalmente al centro */
-}
 
-.header-content p {
-  margin: 0; /* Elimina márgenes predeterminados */
-  font-size: 1.2rem; /* Ajusta el tamaño de fuente según tus necesidades */
-}
-
-.notification-icon {
-  /* Estilos para el icono de notificación */
-  width: 30px; /* Ajusta el tamaño según el icono que uses */
-  height: 30px;
-  background-color: #444; /* Color de fondo para el icono */
-  border-radius: 50%; /* Forma circular */
+.welcome {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 24px;
+  width: max-content;
+}
+.welcome-card {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 0.8rem;
+  border-radius: 1000px;
+  padding: 10px;
+  justify-content: space-around;
+  width: max-content;
+}
+.welcome-card-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+}
+.welcome-card-info {
+  display: flex;
+  flex-direction: column;
+}
+.welcome-card-name {
+  font-size: 16px;
+}
+.welcome-card-username {
+  opacity: 0.6;
+}
+.welcome-card-image {
+  height: 48px;
+  width: 48px;
+  border-radius: 1000px;
+}
+
+.welcome-card-follow-button {
+  margin-left: 16px;
+  border: 0;
+  border-radius: 1000px;
+  padding: 6px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.welcome-card-follow-button:hover {
+  opacity: 0.8;
+}
+.welcome-card-text {
+  display: block;
+}
+.welcome-card-follow-button.is-following {
+  border: 1px solid #bbb;
+  background: transparent;
+  color: #fff;
+  width: 140px;
+}
+.welcome-card-follow-button.is-following:hover {
+  background-color: rgba(255, 0, 0, 0.175);
+  color: red;
+  border: 1px solid red;
+  transition: .3s ease all;
+}
+.welcome-card-stop-following {
+  display: none;
+}
+
+.welcome-card-follow-button.is-following:hover .welcome-card-stop-following {
+  display: block;
+}
+.welcome-card-follow-button.is-following:hover .welcome-card-text {
+  display: none;
 }

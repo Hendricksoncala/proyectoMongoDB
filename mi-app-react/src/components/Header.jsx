@@ -1,21 +1,28 @@
-import React from 'react'; 
+import React from 'react';
 import { FaBell } from 'react-icons/fa'; // Si usas React Icons
-
-
+import '../style/Header.css'
 
 function Header() {
   return (
-    <header>
-      <div className="header-content">
-        <p>Hi, Ferrucio Tuccine!</p>
-        <div className="notification-icon">
-          {/* Usando Font Awesome */}
-          <i class="fa-solid fa-bell"></i>
-
-          {/* O usando React Icons */}
-          {/* <FaBell /> */}
-        </div>
-      </div>
+    <header className='welcome'>
+      <article className="welcome-card">
+        <header className="welcome-card-header">
+          <img
+            className="welcome-card-image"
+            src='https://i.pinimg.com/564x/66/d1/4a/66d14aec6cd11d59264dd58525fdb449.jpg'
+            alt="El icono de perfil"
+          />
+          <div className="welcome-card-info">
+            <strong className="welcome-card-name">Hi, Ferrucio Tuccine!</strong>
+            <span className="welcome-card-username">Let's watch movie together!</span>
+          </div>
+        </header>
+        <aside>
+          <button>
+            <i className="fa-solid fa-bell"></i>
+          </button>
+        </aside>
+      </article>
     </header>
   );
 }

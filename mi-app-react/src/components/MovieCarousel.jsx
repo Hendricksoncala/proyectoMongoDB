@@ -9,7 +9,7 @@ function MovieCarousel({ movies }) {
     dots: true, // Mostrar puntos de navegación
     infinite: true, // Carrusel infinito
     speed: 500, // Velocidad de transición
-    slidesToShow: 3, // Número de tarjetas visibles a la vez
+    slidesToShow: 1, // Número de tarjetas visibles a la vez
     slidesToScroll: 1, 
     responsive: [ // Ajustes para diferentes tamaños de pantalla
       {
@@ -24,7 +24,9 @@ function MovieCarousel({ movies }) {
           slidesToShow: 1,
         }
       }
-    ]
+    ],
+    vertical:false,
+
   };
 
   return (
