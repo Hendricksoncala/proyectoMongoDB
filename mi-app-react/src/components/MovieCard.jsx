@@ -1,8 +1,9 @@
 import React from 'react';
+import '../style/MovieCard.css'; 
 
 function MovieCard({ movie }) {
   return (
-    <div className=''>
+    <div className='movie-card'>
       <img src={movie.imagen} alt={movie.nombre} />
       <h2>{movie.nombre}</h2>
       <p>Género: {movie.genero}</p>

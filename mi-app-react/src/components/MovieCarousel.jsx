@@ -9,8 +9,9 @@ function MovieCarousel({ movies }) {
     dots: true, // Mostrar puntos de navegación
     infinite: true, // Carrusel infinito
     speed: 500, // Velocidad de transición
-    slidesToShow: 1, // Número de tarjetas visibles a la vez
-    slidesToScroll: 1, 
+    slidesToShow: 4, // Número de tarjetas visibles a la vez
+    slidesToScroll: 4,
+    centerMode: true, // Mostrar tarjetas centradas
     responsive: [ // Ajustes para diferentes tamaños de pantalla
       {
         breakpoint: 1024,

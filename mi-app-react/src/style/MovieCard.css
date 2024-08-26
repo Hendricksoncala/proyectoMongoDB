@@ -4,9 +4,13 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
   }
   
+  .movie-card {
+    width: 200px; /* Ajusta el ancho según tus necesidades */
+    margin: 1rem auto; /* Centra la tarjeta */
+  }
   .movie-card img {
-    width: 100%;
-    height: 200px; /* O la altura que desees */
+    width: 10vw;
+    height: auto; /* O la altura que desees */
     object-fit: cover; /* Ajusta la imagen para cubrir el contenedor */
   }
   
@@ -17,6 +21,6 @@
   
   .movie-card p {
     font-size: 0.9rem;
-    color: #666; /* Color de texto gris */
+    color: hsl(0, 0%, 98%); /* Color de texto gris */
     margin: 0;
   }
