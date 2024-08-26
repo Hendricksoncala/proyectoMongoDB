@@ -1,8 +1,10 @@
 import React from 'react';
+import '../style/SearchBar.css'; 
+
 
 function SearchBar() {
   return (
-    <div>
+    <div class= "search-bar">
       <input type="text" placeholder="Buscar película, cine, género..." />
       {/* Puedes agregar un icono de búsqueda aquí */}
     </div>

@@ -5,19 +5,20 @@
   align-items: center;
   margin-top: 2vh;
   width: max-content;
-  width: auto;
+  width: 90%;
+  
   
 }
 .welcome-card {
   display: flex;
   align-items: center;
-  color: #f70606;
+  color: hsl(0, 0%, 100%);
   font-size: 0.8rem;
   border-radius: 1000px;
   padding: 10px;
   justify-content: space-around;
   width: max-content;
-  background: green;
+
 }
 .welcome-card-header {
   display: flex;
@@ -25,7 +26,7 @@
   justify-content: space-between;
   gap: 4px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
+  font-size: 12px;
 }
 .welcome-card-info {
   display: flex;
@@ -33,12 +34,12 @@
 }
 
 .welcome-card-name {
-  font-size: 16px;
+  font-size: 14px;
   opacity: 0.6;
 }
 .welcome-card-username {
   opacity: 0.6;
-  font-size: 18px;
+  font-size: 16px;
 }
 .welcome-card-image {
   height: 48px;
@@ -46,4 +47,8 @@
   border-radius: 1000px;
 }
 
-
+aside button {
+  height: 5vh;
+  width: 5vw;
+  color: red
+}

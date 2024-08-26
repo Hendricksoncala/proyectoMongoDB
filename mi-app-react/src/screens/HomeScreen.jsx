@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import SearchBar from '../SearchBar';
+import SearchBar from '../components/SearchBar';
 import MovieCard from '../components/MovieCard';
 import Header from '../components/Header'; 
 import Footer from '../components/Footer'; 
 import MovieCarousel from '../components/MovieCarousel';
 import FirstMovieCard from '../components/FirstMovieCard';
+import SecondMovieCard from '../components/SecondMovieCard';
 
 
 function HomeScreen() {
@@ -74,7 +75,7 @@ function HomeScreen() {
             <div className="movie-card"> 
               {comingSoonMovies.length > 0 ? (
                 comingSoonMovies.map(movie => (
-                  <FirstMovieCard key={movie._id} movie={movie} />
+                  <SecondMovieCard key={movie._id} movie={movie} />
                 ))
               ) : (
                 <p>No hay películas próximamente disponibles.</p>

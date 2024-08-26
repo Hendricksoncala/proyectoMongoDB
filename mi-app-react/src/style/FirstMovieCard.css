@@ -1,10 +1,11 @@
 
 .movie-card{
-    background: red;
+    /* background: hsl(0, 100%, 50%); */
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    color: white
 
 }
 .movie-card img{

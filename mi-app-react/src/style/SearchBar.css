@@ -1,5 +1,13 @@
-.searchBar {
+.search-bar {
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
+
+.search-bar input {
+    width: 85%;
+    height: 5vh;
+
+}
+

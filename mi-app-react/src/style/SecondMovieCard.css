@@ -1,0 +1,30 @@
+.horizontal-movie-card {
+    display: flex;
+    align-items: center;
+    background: #1a1a1a; /* Color de fondo similar al diseño */
+    padding: 10px;
+    border-radius: 10px; /* Bordes redondeados */
+    margin-bottom: 10px; /* Espacio entre cartas */
+    width: 90%; /* Ancho fijo para controlar el tamaño */
+    color: hsl(0, 28%, 50%); /* Color de texto */
+  }
+  
+  .horizontal-movie-card 
+  
+  .movie-image {
+    width: 60px; /* Tamaño de la imagen */
+    height: 60px; /* Tamaño de la imagen */
+    border-radius: 10px; /* Bordes redondeados para la imagen */
+    margin-right: 10px; /* Espacio entre la imagen y el texto */
+  }
+  
+  .movie-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .movie-info h3 {
+    margin: 0;
+    font-size: 16px; /* Tamaño de fuente del título */
+  }
+  

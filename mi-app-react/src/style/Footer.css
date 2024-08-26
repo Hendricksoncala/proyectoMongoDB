@@ -1,0 +1,33 @@
+/* Footer.css */
+.footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1a1a1a; /* Color de fondo similar al de la imagen */
+    padding: 10px 0;
+    border-top: 1px solid #333; /* Línea de separación superior */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .footer-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff; /* Color de texto blanco */
+    font-size: 12px; /* Tamaño del texto */
+  }
+  
+  .footer-icon i {
+    font-size: 24px; /* Tamaño de los iconos */
+    margin-bottom: 5px; /* Espaciado entre icono y texto */
+  }
+  
+  .footer-icon p {
+    margin: 0;
+  }
+  
+  .footer-icon .fa-home {
+    color: red; /* Color rojo para el ícono seleccionado */
+  }
