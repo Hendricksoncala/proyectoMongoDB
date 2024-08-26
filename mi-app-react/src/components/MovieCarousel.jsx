@@ -3,14 +3,15 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import MovieCard from './MovieCard';
+import FirstMovieCard from './FirstMovieCard';
 
 function MovieCarousel({ movies }) {
   const settings = {
     dots: true, // Mostrar puntos de navegación
     infinite: true, // Carrusel infinito
     speed: 500, // Velocidad de transición
-    slidesToShow: 4, // Número de tarjetas visibles a la vez
-    slidesToScroll: 4,
+    slidesToShow: 1, // Número de tarjetas visibles a la vez
+    slidesToScroll: 1,
     centerMode: true, // Mostrar tarjetas centradas
     responsive: [ // Ajustes para diferentes tamaños de pantalla
       {
@@ -33,7 +34,7 @@ function MovieCarousel({ movies }) {
   return (
     <Slider {...settings}>
       {movies.map(movie => (
-        <MovieCard key={movie._id} movie={movie} />
+        <FirstMovieCard key={movie._id} movie={movie} />
       ))}
     </Slider>
   );

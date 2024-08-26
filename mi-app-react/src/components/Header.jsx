@@ -13,13 +13,14 @@ function Header() {
             alt="El icono de perfil"
           />
           <div className="welcome-card-info">
-            <strong className="welcome-card-name">Hi, Ferrucio Tuccine!</strong>
-            <span className="welcome-card-username">Let's watch movie together!</span>
+            <span className="welcome-card-name">Hi, Ferrucio Tuccine!</span>
+            <strong className="welcome-card-username">Let's watch movie together!</strong>
           </div>
         </header>
         <aside>
           <button>
-            <i className="fa-solid fa-bell"></i>
+            <i className="fa-solid fa-bell">cam</i>
+ 
           </button>
         </aside>
       </article>
