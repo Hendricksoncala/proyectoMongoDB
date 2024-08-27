@@ -161,3 +161,16 @@ exports.obtenerPeliculasEnCartelera = async (req, res) => {
       res.status(500).json({ error: 'Error al obtener películas en cartelera' });
     }
   };
+
+  exports.obtenerFuncionesDePelicula = async (req, res) => {
+    try {
+      const peliculaId = new ObjectId(req.params.id);
+  
+      const funciones = await Funcion.find({ pelicula_id: peliculaId }); 
+  
+      res.json(funciones);
+    } catch (error) {
+      console.error('Error al obtener funciones de la película:', error); 
+      res.status(500).json({ error: 'Error al obtener funciones de la película' });
+    }
+  };

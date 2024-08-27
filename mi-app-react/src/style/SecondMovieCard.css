@@ -5,26 +5,32 @@
     padding: 10px;
     border-radius: 10px; /* Bordes redondeados */
     margin-bottom: 10px; /* Espacio entre cartas */
-    width: 90%; /* Ancho fijo para controlar el tamaño */
+    width: 90vw; /* Ancho fijo para controlar el tamaño */
     color: hsl(0, 28%, 50%); /* Color de texto */
+    text-decoration: none;
+
   }
   
-  .horizontal-movie-card 
+
   
-  .movie-image {
-    width: 60px; /* Tamaño de la imagen */
-    height: 60px; /* Tamaño de la imagen */
+  .horizontal-movie-card .movie-image {
+    width: 15vw; /* Tamaño de la imagen */
+    height: 8vh; /* Tamaño de la imagen */
     border-radius: 10px; /* Bordes redondeados para la imagen */
     margin-right: 10px; /* Espacio entre la imagen y el texto */
   }
   
-  .movie-info {
-    display: flex;
-    flex-direction: column;
+  .horizontal-movie-card .movie-info {
+    text-align: left;
+    background: red;
   }
   
-  .movie-info h3 {
+  .horizontal-movie-card .movie-info h3 {
     margin: 0;
-    font-size: 16px; /* Tamaño de fuente del título */
+    font-size: 16px;
+
   }
-  
+
+  .horizontal-movie-card .movie-info p {
+    margin: 0;
+  }

@@ -1,0 +1,175 @@
+/* General styles for second screen */
+.second-screen {
+    padding: 1rem; /* Reduce general padding */
+    background-color: #1c1c1c;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between; /* Space between back button, title, and menu */
+    align-items: center;
+    margin-bottom: 1rem; /* Reduce bottom margin */
+    color: white;
+}
+
+.title {
+    font-size: 1.5rem; /* Smaller title font size */
+}
+
+.back-button, .menu-button {
+    font-size: 1.2rem; /* Reduce icon size */
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Movie info section */
+.movie-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem; /* Reduce bottom margin */
+}
+
+.movie-info img {
+    width: 100%; /* Make the poster full width */
+    max-width: 350px; /* Limit the width for larger screens */
+     /* Maintain aspect ratio */
+    object-fit: cover;
+    border-radius: 8px; /* Slightly reduce border radius */
+    margin-bottom: 0.5rem; /* Reduce margin */
+    height: 50%;
+}
+
+.movie-info img{
+    width: 90%;
+    height: 200px; /* O la altura que desees */
+    object-fit: cover;
+    border-radius: 10px;
+
+}
+
+.movie-details {
+    text-align: center; /* Center align movie details */
+    display: flex;
+    width: 90%;
+    justify-content: space-between;
+    max-width: 350px;
+    margin-top: 0.5rem; /* Reduce top margin */
+}
+
+
+
+
+.movie-details h2 {
+    font-size: 1.2rem; /* Smaller font size */
+    margin-bottom: 0.3rem; /* Less bottom margin */
+}
+
+.movie-details p {
+    font-size: 0.9rem; /* Smaller font size */
+    margin: 0.3rem 0; /* Less margin */
+}
+
+.trailer-button {
+    background-color: #e50914; /* Netflix red */
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem; /* Smaller padding */
+    border-radius: 4px; /* Reduce border radius */
+    cursor: pointer;
+    margin-bottom: 0.5rem; /* Reduce bottom margin */
+}
+
+/* Cast section */
+.cast-section {
+    margin-top: 1rem; /* Reduce top margin */
+    text-align: center;
+}
+
+.cast-list {
+    display: flex;
+    justify-content: center; /* Center the cast members */
+    gap: 0.5rem; /* Less space between cast members */
+    flex-wrap: wrap; /* Allow wrapping to next line */
+}
+
+.cast-member {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.cast-image {
+    width: 60px; /* Smaller image size */
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.3rem; /* Less margin */
+}
+
+.character-name {
+    font-size: 0.7rem; /* Smaller font size */
+    color: #666;
+}
+
+/* Cinemas section */
+.cinemas-section {
+    margin-top: 1rem; /* Reduce top margin */
+}
+
+.cinemas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Less gap between cinemas */
+}
+
+.cinema {
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
+    border-radius: 8px; /* Reduce border radius */
+    padding: 0.8rem; /* Reduce padding */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between cinema name and logo */
+}
+
+.cinema h4 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 0.9rem; /* Smaller font size */
+    color: white;
+}
+
+.cinema p {
+    margin: 0.3rem 0 0; /* Reduce margins */
+    font-size: 0.8rem; /* Smaller font size */
+    color: #ddd;
+}
+
+.cinema-logo {
+    width: 30px; /* Smaller logo size */
+    height: 30px;
+    object-fit: contain;
+    margin-left: 0.5rem; /* Less margin */
+}
+
+/* Buy button */
+.buy-button {
+    background-color: #e50914;
+    color: white;
+    padding: 0.8rem 1.5rem; /* Smaller padding */
+    border: none;
+    border-radius: 8px; /* Reduce border radius */
+    font-size: 1rem; /* Smaller font size */
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem; /* Less top margin */
+}
+
+.buy-button a {
+    color: inherit;
+    text-decoration: none;
+}

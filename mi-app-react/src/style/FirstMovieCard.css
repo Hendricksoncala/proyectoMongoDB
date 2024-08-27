@@ -8,6 +8,11 @@
     color: white
 
 }
+
+.movie-card h2,p{
+    text-align: center;
+
+}
 .movie-card img{
     width: 50vw;
     height: 50vh;
