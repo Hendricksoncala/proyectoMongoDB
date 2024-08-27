@@ -1,0 +1,62 @@
+/* ... (estilos anteriores para .seat-selection, .seats, .seat, etc.) */
+
+.header {
+  /* ... */
+  margin-bottom: 2rem;
+}
+
+.screen {
+  width: 80%;
+  height: 20px;
+  background-color: #e50914; /* Rojo */
+  margin: 1rem auto; 
+  border-radius: 50px 50px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.legend-item .seat {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+}
+
+.schedule {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 10px;
+}
+
+.schedule-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.schedule-button.selected {
+  background-color: #007bff; /* Azul */
+}
+
+.booking-summary {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.booking-summary h2 {
+  margin: 0.5rem 0;
+}
