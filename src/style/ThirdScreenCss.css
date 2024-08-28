@@ -1,0 +1,136 @@
+.seat-selection {
+  text-align: center;
+  background-color: #141414;
+  min-height: 100vh; /* Asegura que ocupe toda la altura de la pantalla */
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  /* ... */
+  margin-bottom: 2rem;
+}
+
+.screen {
+  width: 80%;
+  height: 20px;
+  background-color: #e50914; /* Rojo */
+  margin: 1rem auto; 
+  border-radius: 50px 50px 0 0; /* Bordes redondeados en la parte superior */
+}
+
+.seats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1; /* Permite que el mapa de asientos ocupe el espacio disponible */
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.row-label {
+  margin-right: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+.seat {
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: #333; /* Disponible (gris oscuro) */
+  color: white;
+  cursor: pointer;
+}
+
+.seat.selected {
+  background-color: #e50914; /* Seleccionado (rojo) */
+  color: white;
+}
+
+.seat.occupied {
+  background-color: #aaa; /* Ocupado (gris claro) */
+  cursor: not-allowed;
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.legend-item .seat {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5rem;
+}
+
+.schedule {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 10px;
+  overflow-x: auto; /* Permite el desplazamiento horizontal si es necesario */
+}
+
+.schedule-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+}
+
+.schedule-button.selected {
+  background-color: #007bff; /* Azul */
+}
+
+.booking-summary {
+  text-align: center;
+  margin-top: 2rem;
+  background-color: #222; /* Fondo oscuro para el resumen */
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.booking-summary h2 {
+  margin: 0.5rem 0;
+  color: white;
+}
+
+.booking-summary p {
+  color: white;
+}
+
+.buy-ticket {
+  background-color: #e50914;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.buy-ticket a {
+  color: inherit;
+  text-decoration: none;
+}

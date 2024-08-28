@@ -1,0 +1,86 @@
+.asientos{
+    padding: 0 15px;
+}
+.asientos__normal{
+    margin-bottom: 30px !important;
+}
+.asientos__normal, 
+.asientos__preferenciales{
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    flex-direction: column;
+    align-items: center;
+}
+.asientos__normal div,
+.asientos__preferenciales div{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.asientos__lista input[type="checkbox"],
+.asientos__preferenciales input[type="checkbox"]{
+    display: none;
+}
+.asientos__lista input[type="checkbox"] + label:before,
+.asientos__preferenciales input[type="checkbox"] + label:before {
+    content: "";
+float: left;
+margin: 0.5em 0.5em 0 0;
+    font-family: "Inter_18pt-Regular";
+    outline: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+    background: #323232;
+    border-radius: 5px;
+}
+.asientos__lista input[type="checkbox"]:checked + label:after,
+.asientos__preferenciales input[type="checkbox"]:checked + label:after {
+    content: attr(data-place);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    font-family: "Inter_18pt-Regular";
+    align-items: center;
+    float: left;
+    background: #FE0000;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-left: -2.2em;
+}
+.asientos__lista input[type="checkbox"] + label:hover::before,
+.asientos__preferenciales input[type="checkbox"] + label:hover::before {
+    background: #FE0000;
+}
+.asientos__lista input[type="checkbox"] + label:hover::after,
+.asientos__preferenciales input[type="checkbox"] + label:hover::after {
+    cursor: pointer;
+    content: attr(data-place);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    font-family: "Inter_18pt-Regular";
+    align-items: center;
+    float: left;
+    background: #FE0000;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    margin-left: -2.2em;
+}
+.asientos__lista input[type="checkbox"].reserved + label:before,
+.asientos__preferenciales input[type="checkbox"].reserved + label:before{
+    content: "";
+    background: #CECECE ;
+}
+.asientos__lista input[type="checkbox"].reserved + label:hover::after,
+.asientos__preferenciales input[type="checkbox"].reserved + label:hover::after{
+    content: attr(data-place);
+    background: #CECECE ;
+    cursor: default;
+}

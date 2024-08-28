@@ -133,3 +133,21 @@ exports.eliminarFuncion = async (req, res) => {
         }
     }
 };
+
+exports.obtenerAsientosDeFuncion = async (req, res) => {
+    try {
+      const funcionId = new ObjectId(req.params.funcionId);
+  
+      const funcion = await Funcion.findById(funcionId).populate('asientosOcupados'); 
+  
+      if (!funcion) {
+        return res.status(404).json({ error: 'Función no encontrada' });
+      }
+  
+      const asientosOcupados = funcion.asientosOcupados; 
+      res.json(asientosOcupados);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener asientos de la función' });
+    }
+  };
+  

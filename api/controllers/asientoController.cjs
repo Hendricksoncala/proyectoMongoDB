@@ -15,15 +15,21 @@ exports.reservarAsientos = async (req, res) => {
       // ... validaciones 
   
       const funcionId = new ObjectId(req.params.funcionId);
-      const asientosSeleccionados = req.body.asientos; // Array de objetos { numero, fila, categoria }
+      const asientosSeleccionados = req.body.asientosSeleccionados; // Array de strings con formato "FilaNúmero" (ej: "A1", "B3")
   
       // Crear los asientos reservados (agrega funcion_id y estado)
       const asientosReservados = await Asiento.insertMany(
-        asientosSeleccionados.map(asiento => ({
-          ...asiento, 
-          funcion_id: funcionId,
-          estado: 'reservado'
-        }))
+        asientosSeleccionados.map(seatNumber => {
+          const [fila, numero] = seatNumber.split(''); 
+          const categoria = obtenerCategoriaDesdeNumero(seatNumber); 
+          return { 
+            numero: parseInt(numero), 
+            fila, 
+            categoria,
+            funcion_id: funcionId,
+            estado: 'reservado'
+          };
+        })
       );
   
       const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);

@@ -1,127 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../ThirdPageCss/ThirdScreenCss.css';
+import '../style/ThirdScreenCss.css' 
+import SeatLayout from '../ThirdPage/SeatLayout';
+
 
 function ThirdScreen() {
-  const { id } = useParams(); // Obtén el ID de la función de la URL
-  const [funcion, setFuncion] = useState(null);
-  const [seats, setSeats] = useState([]); 
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const { id } = useParams(); // ID de la película
+  const navigate = useNavigate();
 
-  app.post('/api/funciones/:id/reservar', async (req, res) => {
-    try {
-      const { asientosSeleccionados } = req.body;
-      const funcionId = req.params.id;
-  
-      // Aquí puedes insertar cada asiento seleccionado en tu base de datos
-      asientosSeleccionados.forEach(async asiento => {
-        await AsientoModel.create({
-          numero: asiento.number,
-          fila: asiento.fila,
-          categoria: asiento.categoria,
-          sala_id: asiento.sala_id,
-          estado: 'ocupado',
-          funcion_id: funcionId
-        });
-      });
-  
-      res.status(200).json({ message: 'Asientos reservados con éxito.' });
-    } catch (error) {
-      res.status(500).json({ error: 'Error al reservar asientos' });
-    }
-  });
+  const [pelicula, setPelicula] = useState(null);
+  const [funciones, setFunciones] = useState([]);
+  const [selectedFuncion, setSelectedFuncion] = useState(null);
+  const [seats, setSeats] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const seatRefs = useRef([]);
 
   useEffect(() => {
-    // Obtener detalles de la función desde el backend
-    axios.get(`http://localhost:3000/api/funciones/${id}`)
+    axios.get(`http://localhost:3000/api/peliculas/${id}`)
       .then(response => {
-        setFuncion(response.data);
-
-        // Inicializa el estado de los asientos basándote en la información de la sala
-        const totalSeats = response.data.sala.capacidad; 
-        const initialSeats = Array.from({ length: totalSeats }, (_, i) => ({
-          number: i + 1,
-          fila: i < 5 ? 'A' : 'B', // Esto es un ejemplo, ajusta según tu lógica
-          status: response.data.asientosOcupados.includes(i + 1) ? 'ocupado' : 'disponible',
-          categoria: 'normal',
-          sala_id: response.data.sala._id,
-        }));
-        setSeats(initialSeats);
+        setPelicula(response.data);
+        return axios.get(`http://localhost:3000/api/peliculas/${id}/funciones`);
+      })
+      .then(funcionesResponse => {
+        setFunciones(funcionesResponse.data);
+        if (funcionesResponse.data.length > 0) {
+          setSelectedFuncion(funcionesResponse.data[0]);
+        }
       })
       .catch(error => {
-        console.error('Error al obtener detalles de la función:', error);
+        console.error('Error al obtener detalles de la película o funciones:', error.response ? error.response.data : error.message);
       });
   }, [id]);
 
-  const toggleSeat = (seatNumber) => {
-    const seatIndex = seats.findIndex(seat => seat.number === seatNumber);
+  useEffect(() => {
+    if (selectedFuncion) {
+      axios.get(`http://localhost:3000/api/funciones/${selectedFuncion._id}/asientos`)
+        .then(asientosResponse => {
+          const asientosOcupados = asientosResponse.data.map(asiento => asiento.numero);
+  
+          const filas = ['A', 'B', 'C', 'D', 'E', 'F'];
+          const asientosPorFila = 8; // Ajusta según la capacidad de la sala
+  
+          const initialSeats = filas.map(fila =>
+            Array.from({ length: asientosPorFila }, (_, colIndex) => {
+              const seatNumber = fila + (colIndex + 1);
+              return {
+                number: seatNumber,
+                status: asientosOcupados.includes(seatNumber) ? 'occupied' : 'available'
+              };
+            })
+          );
+  
+          setSeats(initialSeats);
+        })
+        .catch(error => {
+          console.error('Error al obtener asientos de la función:', error.response ? error.response.data : error.message);
+        });
+    }
+  }, [selectedFuncion]);
 
-    if (seats[seatIndex].status === 'disponible') {
-      setSeats(prevSeats => 
-        prevSeats.map((seat, index) => 
-          index === seatIndex ? { ...seat, status: 'selected' } : seat
-        )
-      );
-      setSelectedSeats(prevSelected => [...prevSelected, seatNumber]);
-    } else if (seats[seatIndex].status === 'selected') {
-      setSeats(prevSeats => 
-        prevSeats.map((seat, index) => 
-          index === seatIndex ? { ...seat, status: 'disponible' } : seat
-        )
-      );
-      setSelectedSeats(prevSelected => prevSelected.filter(num => num !== seatNumber));
+  const toggleSeat = (rowIndex, colIndex) => {
+    const seat = seats[rowIndex][colIndex];
+    if (seat.status === 'available') {
+      setSeats(prevSeats => {
+        const newSeats = [...prevSeats];
+        newSeats[rowIndex][colIndex] = { ...seat, status: 'selected' };
+        return newSeats;
+      });
+      setSelectedSeats(prevSelected => [...prevSelected, seat.number]);
+      setTotalPrice(prevPrice => prevPrice + (selectedFuncion?.precio || 0));
+    } else if (seat.status === 'selected') {
+      setSeats(prevSeats => {
+        const newSeats = [...prevSeats];
+        newSeats[rowIndex][colIndex] = { ...seat, status: 'available' };
+        return newSeats;
+      });
+      setSelectedSeats(prevSelected => prevSelected.filter(num => num !== seat.number));
+      setTotalPrice(prevPrice => prevPrice - (selectedFuncion?.precio || 0));
     }
   };
 
   const handlePurchase = async () => {
     try {
-      const selectedSeatDetails = seats.filter(seat => selectedSeats.includes(seat.number));
-      const response = await axios.post(`/api/funciones/${id}/reservar`, {
-        asientosSeleccionados: selectedSeatDetails
+      const response = await axios.post(`/api/funciones/${selectedFuncion._id}/reservar`, {
+        asientosSeleccionados: selectedSeats.map(seatNumber => {
+          const [fila, numeroStr] = seatNumber.split('');
+          const numero = parseInt(numeroStr); // Convertir el número a entero
+          const categoria = obtenerCategoriaDesdeNumero(seatNumber); 
+          return { numero, fila, categoria };
+        })
       });
+  
       console.log(response.data); 
+  
+      // Actualiza el estado de los asientos después de la reserva exitosa
       setSeats(prevSeats => 
-        prevSeats.map(seat => 
-          selectedSeats.includes(seat.number) ? { ...seat, status: 'ocupado' } : seat
+        prevSeats.map(row => 
+          row.map(seat => 
+            selectedSeats.includes(seat.number) ? { ...seat, status: 'occupied' } : seat
+          )
         )
       );
-      setSelectedSeats([]); 
+      setSelectedSeats([]);
+      setTotalPrice(0); // Reinicia el precio total
+  
+      navigate(`/confirmacion/${response.data._id}`); 
     } catch (error) {
       console.error('Error al reservar asientos:', error);
+      // Manejar el error en la interfaz de usuario (mostrar un mensaje de error, etc.)
     }
   };
 
-  if (!funcion) {
+  if (!pelicula || !funciones) {
     return <div>Cargando...</div>;
   }
 
   return (
     <div className="seat-selection">
-      {/* Contenido */}
-      <div className="seats">
-        {seats.map(seat => (
+      <div className="header">
+        <Link to={`/pelicula/${id}`} className="back-button">⬅️</Link>
+        <h1>Choose Seat</h1>
+      </div>
+
+      <div className="screen">Screen This Way</div>
+
+      <SeatLayout 
+      seats={seats} 
+      onSeatSelectionChange={setSelectedSeats} 
+    />
+
+
+      <div className="seat-legend">
+        <div className="legend-item">
+          <div className="seat available"></div>
+          <p>Available</p>
+        </div>
+        <div className="legend-item">
+          <div className="seat reserved"></div>
+          <p>Reserved</p>
+        </div>
+        <div className="legend-item">
+          <div className="seat selected"></div>
+          <p>Selected</p>
+        </div>
+      </div>
+
+      <div className="schedule">
+        {funciones.map(funcion => (
           <button
-            key={seat.number}
-            className={`seat ${seat.status}`}
-            onClick={() => toggleSeat(seat.number)}
-            disabled={seat.status === 'ocupado'}
+            key={funcion._id}
+            className={`schedule-button ${selectedFuncion && selectedFuncion._id === funcion._id ? 'selected' : ''}`}
+            onClick={() => setSelectedFuncion(funcion)}
           >
-            {seat.number}
+            <p>{new Date(funcion.horario.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
+            <p>{funcion.horario.hora}</p>
+            <p>{funcion.precio} - {funcion.tipoProyeccion}</p>
           </button>
         ))}
       </div>
 
-      <div className="summary">
-        <h2>Asientos Seleccionados:</h2>
-        <ul>
-          {selectedSeats.map(seatNumber => (
-            <li key={seatNumber}>Asiento {seatNumber}</li>
-          ))}
-        </ul>
+      <div className="booking-summary">
+        <p>Price</p>
+        <h2>${totalPrice.toFixed(2)}</h2>
+        <button className="buy-ticket" onClick={handlePurchase} disabled={!selectedFuncion || selectedSeats.length === 0}>
+          Buy ticket
+        </button>
       </div>
-
-      <button className="buy-ticket" onClick={handlePurchase}>Comprar Boletos</button>
     </div>
   );
 }

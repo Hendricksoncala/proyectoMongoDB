@@ -6,6 +6,7 @@ const funcionController = require('../controllers/funcionController.cjs');
 router.get('/', funcionController.obtenerTodasFunciones); 
 router.get('/:id', funcionController.obtenerFuncionPorId);
 router.post('/', funcionController.crearFuncion);
+router.get('/:funcionId/asientos', funcionController.obtenerAsientosDeFuncion); 
 // ... otras rutas para funciones (actualizar, eliminar, etc.)
 
 module.exports = router;

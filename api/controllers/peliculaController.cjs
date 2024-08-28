@@ -1,5 +1,6 @@
 const Pelicula = require('../models/peliculaModel.cjs');
 const Funcion = require('../models/funcionModel.cjs');
+const { ObjectId } = require('mongodb'); 
 
 /**
  * Obtiene todas las películas disponibles en el catálogo, incluyendo sus horarios de proyección.
@@ -164,11 +165,12 @@ exports.obtenerPeliculasEnCartelera = async (req, res) => {
 
   exports.obtenerFuncionesDePelicula = async (req, res) => {
     try {
-      const peliculaId = new ObjectId(req.params.id);
+      const peliculaId = new ObjectId(req.params.id); 
   
       const funciones = await Funcion.find({ pelicula_id: peliculaId }); 
   
       res.json(funciones);
+      console.log(funciones)
     } catch (error) {
       console.error('Error al obtener funciones de la película:', error); 
       res.status(500).json({ error: 'Error al obtener funciones de la película' });
