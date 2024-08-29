@@ -27,19 +27,14 @@ exports.obtenerTodasPeliculas = async (req, res) => {
  */
 exports.obtenerDetallesPelicula = async (req, res) => {
     try {
-        const peliculaId = req.params.id; 
-        const pelicula = await Pelicula.getById(peliculaId);
-        res.status(200).json(pelicula);
+      const peliculaId = req.params.id;
+      const pelicula = await Pelicula.getById(peliculaId);
+      res.status(200).json(pelicula);
     } catch (error) {
-        // Si la película no se encuentra, envía un error 404
-        if (error.message.includes('no encontrada')) {
-            res.status(404).json({ error: error.message });
-        } else {
-            // Si es otro tipo de error, envía un error 500
-            res.status(500).json({ error: error.message });
-        }
+      console.error('Error al obtener detalles de la película:', error);
+      res.status(500).json({ error: error.message });
     }
-};
+  };
 
 //opciones creadas por si se necesitan crear o actulizar las peliculas, claro, tambien eliminarlas
 exports.crearPelicula = async (req, res) => {
@@ -162,17 +157,27 @@ exports.obtenerPeliculasEnCartelera = async (req, res) => {
       res.status(500).json({ error: 'Error al obtener películas en cartelera' });
     }
   };
-
   exports.obtenerFuncionesDePelicula = async (req, res) => {
     try {
-      const peliculaId = new ObjectId(req.params.id); 
+      const peliculaId = new ObjectId(req.params.id); // Obtén el ID de la película de la URL
   
-      const funciones = await Funcion.find({ pelicula_id: peliculaId }); 
+      const funciones = await Funcion.find({ pelicula_id: peliculaId }); // Consulta las funciones por pelicula_id
   
       res.json(funciones);
-      console.log(funciones)
     } catch (error) {
       console.error('Error al obtener funciones de la película:', error); 
       res.status(500).json({ error: 'Error al obtener funciones de la película' });
+    }
+  };
+
+  exports.getById = async (id) => {
+    try {
+      const pelicula = await Pelicula.findById(id);
+      if (!pelicula) {
+        throw new Error('Película no encontrada');
+      }
+      return pelicula;
+    } catch (error) {
+      throw new Error(error.message);
     }
   };

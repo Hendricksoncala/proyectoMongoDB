@@ -1,8 +1,20 @@
-const AsientoManager = require('../models/asientoModel.cjs');
+const { Asiento, AsientoManager } = require('../models/asientoModel.cjs');
 const { ObjectId } = require("mongodb");
 const { validationResult } = require('express-validator');
 const asientoValidator = require('../validators/asientoValidator.cjs');
 
+const mongoose = require('mongoose');
+
+
+function obtenerCategoriaDesdeNumero(seatNumber) {
+  const fila = seatNumber.charAt(0);
+
+  if (fila === 'A' || fila === 'B') {
+    return 'VIP'; 
+  } else {
+    return 'normal';
+  }
+}
 /**
  * Reserva los asientos especificados para una función.
  *
@@ -11,38 +23,51 @@ const asientoValidator = require('../validators/asientoValidator.cjs');
  * @returns {Promise<void>} Envía una respuesta JSON indicando el éxito de la reserva o un mensaje de error en caso de fallo.
  */
 exports.reservarAsientos = async (req, res) => {
-    try {
-      // ... validaciones 
-  
-      const funcionId = new ObjectId(req.params.funcionId);
-      const asientosSeleccionados = req.body.asientosSeleccionados; // Array de strings con formato "FilaNúmero" (ej: "A1", "B3")
-  
-      // Crear los asientos reservados (agrega funcion_id y estado)
-      const asientosReservados = await Asiento.insertMany(
-        asientosSeleccionados.map(seatNumber => {
-          const [fila, numero] = seatNumber.split(''); 
-          const categoria = obtenerCategoriaDesdeNumero(seatNumber); 
-          return { 
-            numero: parseInt(numero), 
-            fila, 
-            categoria,
-            funcion_id: funcionId,
-            estado: 'reservado'
-          };
-        })
-      );
-  
-      const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
-  
-      await Funcion.findByIdAndUpdate(funcionId, {
-        $push: { asientos_ocupados: { $each: asientosReservadosIds } }
-      });
-  
-      res.status(201).json({ message: 'Asientos reservados correctamente', asientos: asientosReservados });
-    } catch (error) {
-      // ... manejo de errores
-    }
-  };
+  try {
+    // ... validaciones 
+
+    const funcionId = new ObjectId(req.params.funcionId);
+    const asientosSeleccionados = req.body.asientosSeleccionados; // Array de strings con formato "FilaNúmero"
+
+    // ... lógica para verificar la disponibilidad de los asientos (opcional, puedes implementarla más adelante)
+
+    // Crear los asientos reservados (agrega funcion_id y estado)
+    const asientosReservados = await Asiento.insertMany(
+      asientosSeleccionados.map(seatNumber => {
+        const [fila, numeroStr] = seatNumber.split('');
+        const numero = parseInt(numeroStr);
+        const categoria = obtenerCategoriaDesdeNumero(seatNumber); 
+        return { 
+          numero, 
+          fila, 
+          categoria,
+          funcion_id: funcionId,
+          estado: 'reservado'
+        };
+      })
+    );
+
+    const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
+
+    // Actualizar la función para agregar los asientos ocupados
+    const funcionActualizada = await Funcion.findByIdAndUpdate(funcionId, {
+      $push: { asientos_ocupados: { $each: asientosReservadosIds } }
+    }, { new: true }); 
+
+    // Obtener los asientos ocupados actualizados de la función
+    const asientosOcupadosActualizados = funcionActualizada.asientos_ocupados;
+
+    res.status(201).json({ 
+      message: 'Asientos reservados correctamente', 
+      asientos: asientosReservados, 
+      asientosOcupados: asientosOcupadosActualizados 
+    });
+  } catch (error) {
+    console.error('Error al reservar asientos:', error); 
+    res.status(500).json({ error: 'Error interno del servidor al reservar asientos' });
+  }
+};
+
 /**
  * Cancela la reserva de los asientos especificados para una función.
  *
@@ -52,7 +77,7 @@ exports.reservarAsientos = async (req, res) => {
  */
 exports.cancelarReservaAsientos = async (req, res) => {
     try {
-        // Aplicar las validaciones para cancelar reserva de asientos
+        // Aplicar las validaciones pconst Asiento = require('../models/asientoModel');ara cancelar reserva de asientos
         await Promise.all(asientoValidator.validarCancelarReservaAsientos.map(validation => validation.run(req)));
 
         const errors = validationResult(req);

@@ -1,5 +1,6 @@
 const { ObjectId } = require( "mongodb");
 const connect = require("../helpers/connection.cjs"); // Asegúrate de que la ruta sea correcta
+const mongoose = require('mongoose');
 
 const connection = new connect();
 const db =  connection.conexion.db('movis');
@@ -7,6 +8,24 @@ const db =  connection.conexion.db('movis');
 const coleccionSala =  db.collection('sala');
 const coleccionAsiento =  db.collection('asiento');
 const coleccionFuncion =  db.collection('funcion');
+
+const asientoSchema = new mongoose.Schema({
+    numero: Number, 
+    fila: String,
+    categoria: String, 
+    funcion_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Funcion' 
+    },
+    estado: { 
+      type: String,
+      enum: ['libre', 'reservado'], 
+      default: 'libre'
+    }
+  });
+  
+  const Asiento = mongoose.model('Asiento', asientoSchema);
+
 
  class AsientoManager {
     static instance;
@@ -187,4 +206,7 @@ const coleccionFuncion =  db.collection('funcion');
 }
 
 
-module.exports = AsientoManager; 
+
+
+
+module.exports = { Asiento, AsientoManager };

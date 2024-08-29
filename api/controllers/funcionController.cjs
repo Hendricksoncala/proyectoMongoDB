@@ -137,8 +137,8 @@ exports.eliminarFuncion = async (req, res) => {
 exports.obtenerAsientosDeFuncion = async (req, res) => {
     try {
       const funcionId = new ObjectId(req.params.funcionId);
-  
-      const funcion = await Funcion.findById(funcionId).populate('asientosOcupados'); 
+    console.log(funcionId)
+      const funcion = await Funcion.findById(funcionId).populate('asientos_ocupados'); 
   
       if (!funcion) {
         return res.status(404).json({ error: 'Función no encontrada' });

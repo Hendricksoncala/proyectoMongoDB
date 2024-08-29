@@ -1,5 +1,6 @@
 const Sala = require('../models/salaModel.cjs');
-
+const Asiento = require('../models/asientoModel.cjs');
+const ObjectId = require('mongodb').ObjectId;
 /**
  * Obtiene todas las salas.
  *
@@ -100,3 +101,23 @@ exports.eliminarSala = async (req, res) => {
         res.status(404).json({ error: error.message }); 
     }
 };
+
+exports.obtenerAsientosDeSala = async (req, res) => {
+    try {
+      const salaId = new ObjectId(req.params.salaId);
+  
+      // Verifica si la sala existe
+      const sala = await Sala.findById(salaId);
+      if (!sala) {
+        return res.status(404).json({ error: 'Sala no encontrada' });
+      }
+  
+      // Obtén los asientos de la sala
+      const asientos = await Asiento.find({ sala_id: salaId });
+  
+      res.json(asientos);
+    } catch (error) {
+      console.error('Error al obtener asientos de la sala:', error);
+      res.status(500).json({ error: 'Error al obtener asientos de la sala' });
+    }
+  };
