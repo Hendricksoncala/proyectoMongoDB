@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-// import '../ThirdPageCss/seatDesign.css'; 
-import '../ThirdPageCss/seatDesign.css'
+import React, { useState } from 'react';
+import '../style/ThirdScreenCss.css'; 
 
 function SeatLayout({ seats, occupiedSeats, onSeatSelectionChange }) {
-  const handleSeatClick = (seatNumber) => {
+  const [selectedSeatsLocal, setSelectedSeatsLocal] = useState([]);
+
+  const handleSeatClick = (e, seatNumber) => {
+    e.preventDefault(); // Evita la recarga de la página al hacer clic
     if (occupiedSeats.includes(seatNumber)) return; 
 
-    onSeatSelectionChange(prevSelectedSeats => {
+    setSelectedSeatsLocal(prevSelectedSeats => {
       if (prevSelectedSeats.includes(seatNumber)) {
         // Deseleccionar asiento
         return prevSelectedSeats.filter(num => num !== seatNumber);
@@ -15,6 +17,10 @@ function SeatLayout({ seats, occupiedSeats, onSeatSelectionChange }) {
         return [...prevSelectedSeats, seatNumber];
       }
     });
+  };
+
+  const handleConfirmSelection = () => {
+    onSeatSelectionChange(selectedSeatsLocal); // Envía la selección final a ThirdScreen
   };
 
   return (
@@ -28,8 +34,8 @@ function SeatLayout({ seats, occupiedSeats, onSeatSelectionChange }) {
                 {row.map(seat => (
                   <button 
                     key={seat.number}
-                    className={`seat ${seat.status}`}
-                    onClick={() => handleSeatClick(seat.number)}
+                    className={`seat ${seat.status} ${selectedSeatsLocal.includes(seat.number) ? 'selected' : ''}`}
+                    onClick={(e) => handleSeatClick(e, seat.number)} // Pasa el evento al manejador
                     disabled={seat.status === 'occupied'}
                   >
                     {seat.status !== 'occupied' && seat.number} 
@@ -39,6 +45,8 @@ function SeatLayout({ seats, occupiedSeats, onSeatSelectionChange }) {
             </div>
           </article>
         ))}
+        {/* Este botón no es necesario para evitar la recarga, pero puede ser útil para tu flujo */}
+        {/* <button type="button" onClick={handleConfirmSelection}>Confirmar Selección</button> */}
       </form>
     </section>
   );

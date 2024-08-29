@@ -137,16 +137,18 @@ exports.eliminarFuncion = async (req, res) => {
 exports.obtenerAsientosDeFuncion = async (req, res) => {
     try {
       const funcionId = new ObjectId(req.params.funcionId);
-    console.log(funcionId)
-      const funcion = await Funcion.findById(funcionId).populate('asientos_ocupados'); 
+      console.log('ID de función recibido:', funcionId); 
+  
+      const funcion = await Funcion.findById(funcionId);
   
       if (!funcion) {
         return res.status(404).json({ error: 'Función no encontrada' });
       }
   
-      const asientosOcupados = funcion.asientosOcupados; 
+      const asientosOcupados = funcion.asientos_ocupados; 
       res.json(asientosOcupados);
     } catch (error) {
+      console.error('Error al obtener asientos de la función:', error); 
       res.status(500).json({ error: 'Error al obtener asientos de la función' });
     }
   };

@@ -35,7 +35,7 @@ class Funcion {
             if (!ObjectId.isValid(id)) {
                 throw new Error('ID de función inválido');
             }
-
+    
             const funcion = await coleccionFuncion.findOne({ _id: new ObjectId(id) });
             if (!funcion) {
                 throw new Error(`Función con ID ${id} no encontrada`);

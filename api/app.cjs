@@ -29,6 +29,7 @@ const asientoRouter = require('./routers/asientoRouter.cjs');
 const salaRouter = require('./routers/salaRouter.cjs');
 const funcionRouter = require('./routers/funcionRouter.cjs');
 
+
 app.use('/api/clientes', clienteRouter);
 app.use('/api/peliculas', peliculaRouter);
 app.use('/api/tickets', ticketRouter);

@@ -4,16 +4,17 @@ import axios from 'axios';
 import '../style/ThirdScreenCss.css';
 import SeatLayout from '../ThirdPage/SeatLayout';
 
-function ThirdScreen() {
+function ThirdScreen({ onSeatSelectionChange }) {
   const { id } = useParams(); // ID de la película
   const navigate = useNavigate();
 
-  const [pelicula, setPelicula] = useState(null);
+  const [pelicula, setPelicula] = useState(null); 
   const [funciones, setFunciones] = useState([]);
   const [selectedFuncion, setSelectedFuncion] = useState(null);
-  const [seats, setSeats] = useState([]);
+  const [seats, setSeats] = useState([]); 
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+
   useEffect(() => {
     // Obtener detalles de la película
     axios.get(`http://localhost:3000/api/peliculas/${id}`)
@@ -28,7 +29,6 @@ function ThirdScreen() {
         if (funcionesResponse.data.length > 0) {
           setSelectedFuncion(funcionesResponse.data[0]);
         } else {
-          // Manejar el caso de que no haya funciones disponibles
           console.error('No hay funciones disponibles para esta película.');
           // Puedes mostrar un mensaje al usuario o redirigirlo a otra pantalla
         }
@@ -41,112 +41,77 @@ function ThirdScreen() {
 
   useEffect(() => {
     if (selectedFuncion) {
-      // Obtener asientos de la sala asociada a la función
-      axios.get(`http://localhost:3000/api/salas/${selectedFuncion.sala_id}/asientos`)
-        .then(asientosResponse => {
-          const asientos = asientosResponse.data;
-
-          // Marcar los asientos ocupados en la función seleccionada
-          const asientosOcupados = selectedFuncion.asientos_ocupados.map(asientoId =>
-            asientos.find(asiento => asiento._id.toString() === asientoId.toString())?.numero
-          );
-
-          setSeats(asientos.map(asiento => ({
-            number: asiento.numero, // O adapta según tu estructura de datos
-            fila: asiento.fila,
-            status: asientosOcupados.includes(asiento.numero) ? 'occupied' : 'available'
-          })));
+      const filas = ['A', 'B', 'C', 'D', 'E', 'F']; 
+      const asientosPorFila = 8; 
+  
+      const initialSeats = filas.map(fila => 
+        Array.from({ length: asientosPorFila }, (_, colIndex) => {
+          const seatNumber = fila + (colIndex + 1);
+          return {
+            number: seatNumber,
+            status: 'available' 
+          };
         })
-        .catch(error => {
-          console.error('Error al obtener asientos de la sala:', error);
-        });
+      );
+  
+      setSeats(initialSeats);
     }
-  }, [selectedFuncion]);
+  }, [selectedFuncion]); 
+
+  const actualizarEstadoAsientos = (asientosOcupados) => {
+    setSeats(prevSeats => 
+      prevSeats.map(row => 
+        row.map(seat => 
+          asientosOcupados.includes(seat.number) ? { ...seat, status: 'occupied' } : seat
+        )
+      )
+    );
+  }
 
   const handleFuncionSelect = (funcion) => {
     setSelectedFuncion(funcion);
-    setTotalPrice(0);
-    setSelectedSeats([]);
+    setTotalPrice(0); 
+    setSelectedSeats([]); 
   };
 
-  const handleSeatSelectionChange = (newSelectedSeats) => {
-    setSelectedSeats(newSelectedSeats);
-    setTotalPrice(newSelectedSeats.length * (selectedFuncion?.precio || 0));
+  const handleSeatSelectionChange = (seatNumbers) => {
+    setSelectedSeats(seatNumbers);
+    setTotalPrice(seatNumbers.length * (selectedFuncion?.precio || 0)); // Actualiza el precio total
   };
 
   const handlePurchase = async () => {
     try {
-      const response = await axios.post(`/api/funciones/${selectedFuncion._id}/reservar`, {
-        asientosSeleccionados: selectedSeats.map(seatNumber => {
-          const [fila, numeroStr] = seatNumber.split('');
-          const numero = parseInt(numeroStr);
-          return { numero, fila, categoria: 'normal' }; // Asume que todos los asientos son "normales"
-        })
+      const url = `http://localhost:3000/api/funciones/${selectedFuncion._id}/reservar`;
+      console.log("URL de la solicitud:", url);
+      const response = await axios.post(url, {
+        asientosSeleccionados: selectedSeats
       });
-      console.log(response.data);
+  
+      console.log("Respuesta del servidor:", response.data);
+      actualizarEstadoAsientos(response.data.asientosOcupados); 
+    
       navigate(`/confirmacion/${response.data._id}`);
     } catch (error) {
       console.error('Error al reservar asientos:', error);
-      // Manejar el error en la interfaz de usuario
-    }
-  };
-
-  if (!pelicula || !funciones) {
-    return <div>Cargando...</div>;
-  }
-
-  const sssss = Array.from({ length: 50 }, (_, index) => ({
-    objectId: `objectId_${index + 1}`,
-    idNumber: index + 1
-  }));
-
-  // Dividir los asientos en grupos de 10
-  const groupedSeats = [];
-  for (let i = 0; i < sssss.length; i += 10) {
-    groupedSeats.push(sssss.slice(i, i + 10));
-  }
-  const sentToDatabase = async () => {
-    try {
-      const response = await axios.post(`/api/funciones/${selectedFuncion._id}/reservar`, { // <- ACA DEBE IR LA API DE LA CREACION 'POST' DE LA COLECCION 'TICKETS'
-        //CREAR SILLAS
-      });
-      console.log(response.data);
-      navigate(`/confirmacion/${response.data._id}`);
-    } catch (error) {
-      console.error('Error al reservar asientos:', error);
-      // Manejar el error en la interfaz de usuario
+      // Podrías mostrar un mensaje de error al usuario aquí
     }
   };
 
   return (
     <div className="seat-selection">
       <div className="header">
-        <Link to={`/pelicula/${id}`} className="back-button">⬅️</Link>
+        <Link to={`/pelicula/${id}`} className="back-button">⬅️</Link> 
         <h1>Choose Seat</h1>
-        {/* Puedes agregar el menú de tres puntos aquí si es necesario */}
       </div>
 
-      <div className="screen">Screen This Way</div>
+      <div className="screen">Screen This Way</div> 
 
-      <SeatLayout
-        seats={seats}
-        occupiedSeats={seats.flat().filter(seat => seat.status === 'occupied').map(seat => seat.number)}
-        onSeatSelectionChange={handleSeatSelectionChange}
+      <SeatLayout 
+        seats={seats} 
+        occupiedSeats={seats.flat().filter(seat => seat.status === 'occupied').map(seat => seat.number)} 
+        onSeatSelectionChange={handleSeatSelectionChange} 
       />
-      {/* SILLAS */}
-      <div>
-        {groupedSeats.map((group, groupIndex) => (
-          <div key={groupIndex} className="seat-row">
-            {group.map(seat => (
-              <div key={seat.objectId} className="seat-item" onClick={sentToDatabase}>
-                {/* <p>ObjectId: {seat.objectId}</p>
-                <p>IdNumber: {seat.idNumber}</p> */}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      {/* Leyenda de asientos */}
+
       <div className="seat-legend">
         <div className="legend-item">
           <div className="seat available"></div>
@@ -162,25 +127,24 @@ function ThirdScreen() {
         </div>
       </div>
 
-      {/* Horarios de funciones */}
       <div className="schedule">
         {funciones.map(funcion => (
-          <button
-            key={funcion._id}
+          <button 
+            key={funcion._id} 
             className={`schedule-button ${selectedFuncion && selectedFuncion._id === funcion._id ? 'selected' : ''}`}
             onClick={() => handleFuncionSelect(funcion)}
           >
-            <p>{new Date(funcion.horario.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</p>
+            <p>{new Date(funcion.horario.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}</p> 
             <p>{funcion.horario.hora}</p>
-            <p>{funcion.precio} - {funcion.tipoProyeccion}</p>
+            <p>{funcion.precio} - {funcion.tipoProyeccion}</p> 
           </button>
         ))}
       </div>
-      {/* Resumen y botón de compra */}
+
       <div className="booking-summary">
         <p>Price</p>
         <h2>${totalPrice.toFixed(2)}</h2>
-        <button className="buy-ticket" onClick={handlePurchase} disabled={!selectedFuncion || selectedSeats.length === 0}>
+        <button type="button" onClick={handlePurchase} disabled={!selectedFuncion || selectedSeats.length === 0}>
           Buy ticket
         </button>
       </div>
