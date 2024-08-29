@@ -134,3 +134,21 @@
   color: inherit;
   text-decoration: none;
 }
+.seat-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 50px;
+}
+
+.seat-item {
+  width: calc(100% / 10 - 1rem); /* Ajusta el ancho de cada asiento */
+  height: 2rem; /* Define la altura de cada asiento */
+  margin: 0.5rem; /* Espaciado entre los elementos */
+  padding: 5px; /* Reduce el padding */
+  border: 1px solid #ccc;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

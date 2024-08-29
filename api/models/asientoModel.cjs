@@ -41,40 +41,45 @@ const asientoSchema = new mongoose.Schema({
      * @returns {Promise<boolean>} Una promesa que se resuelve con `true` si la reserva fue exitosa, o lanza un error en caso contrario.
      * @throws {Error} Si los datos de reserva son inválidos o si algún asiento no está disponible.
      */
-    async reservarAsientos(funcionId, asientosIds) {
+    async reservarAsientos(funcionId, asientosSeleccionados) { 
         try {
             // Validar datos de entrada
-            if (!funcionId || !asientosIds || !Array.isArray(asientosIds) || asientosIds.length === 0) {
+            if (!funcionId || !asientosSeleccionados || !Array.isArray(asientosSeleccionados) || asientosSeleccionados.length === 0) {
                 throw new Error('Datos de reserva inválidos');
             }
-
-            for (const asientoId of asientosIds) {
-                // Verificar si el asiento está disponible en la función
-                const funcion = await coleccionFuncion.findOne(
-                    { _id: funcionId, asientos_ocupados: { $nin: [asientoId] } }
-                );
-                if (!funcion) {
-                    throw new Error(`El asiento ${asientoId} no está disponible para reservar en esta función`);
-                }
-
-                // Verificar si el asiento está disponible en general
-                const resultadoActualizacion = await coleccionAsiento.updateOne(
-                    { _id: asientoId, estado: "disponible" }, 
-                    { $set: { estado: "reservado", fechaReserva: new Date() } }
-                );
-                if (resultadoActualizacion.modifiedCount === 0) {
-                    throw new Error(`El asiento ${asientoId} no está disponible para reservar`);
-                }
-
-                // Agregar el asiento a la lista de asientos ocupados de la función
-                await coleccionFuncion.updateOne(
-                    { _id: funcionId },
-                    { $addToSet: { asientos_ocupados: asientoId } } 
-                );
-            }
-
+    
+            // Crear los asientos reservados
+            const asientosReservados = await Asiento.insertMany(
+                asientosSeleccionados.map(seatNumber => {
+                    const [fila, numeroStr] = seatNumber.split('');
+                    const numero = parseInt(numeroStr);
+                    const categoria = obtenerCategoriaDesdeNumero(seatNumber); 
+                    return { 
+                        numero, 
+                        fila, 
+                        categoria,
+                        funcion_id: funcionId,
+                        estado: 'reservado'
+                    };
+                })
+            );
+    
+            const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
+    
+            // Actualizar la función para agregar los asientos ocupados
+            const funcionActualizada = await Funcion.findByIdAndUpdate(funcionId, {
+                $push: { asientos_ocupados: { $each: asientosReservadosIds } }
+            }, { new: true }); 
+    
+            // Obtener los asientos ocupados actualizados de la función
+            const asientosOcupadosActualizados = funcionActualizada.asientos_ocupados;
+    
             console.log("Asientos reservados correctamente");
-            return true;
+            return { 
+                message: 'Asientos reservados correctamente', 
+                asientos: asientosReservados, 
+                asientosOcupados: asientosOcupadosActualizados 
+            };
         } catch (error) {
             console.error('Error al reservar asientos:', error);
             throw error;
@@ -173,7 +178,7 @@ const asientoSchema = new mongoose.Schema({
         }
     }
 
-    static async liberarAsientosExpirados() {
+     async liberarAsientosExpirados() {
         try {
             const fechaExpiracion = new Date();
             fechaExpiracion.setMinutes(fechaExpiracion.getMinutes() - 15); // 15 minutos de tiempo de expiración

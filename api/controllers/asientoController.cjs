@@ -24,12 +24,16 @@ function obtenerCategoriaDesdeNumero(seatNumber) {
  */
 exports.reservarAsientos = async (req, res) => {
   try {
+    console.log('Datos recibidos en la solicitud:', req.params, req.body); 
+
     // ... validaciones 
 
     const funcionId = new ObjectId(req.params.funcionId);
-    const asientosSeleccionados = req.body.asientosSeleccionados; // Array de strings con formato "FilaNúmero"
+    const asientosSeleccionados = req.body.asientosSeleccionados; 
 
-    // ... lógica para verificar la disponibilidad de los asientos (opcional, puedes implementarla más adelante)
+    // ... lógica para verificar la disponibilidad de los asientos (opcional)
+
+    console.log('Asientos seleccionados:', asientosSeleccionados); 
 
     // Crear los asientos reservados (agrega funcion_id y estado)
     const asientosReservados = await Asiento.insertMany(
