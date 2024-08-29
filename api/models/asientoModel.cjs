@@ -24,7 +24,7 @@ const asientoSchema = new mongoose.Schema({
     }
   });
   
-  const Asiento = mongoose.model('Asiento', asientoSchema);
+  const Asiento = mongoose.model('asiento', asientoSchema);
 
 
  class AsientoManager {
@@ -41,12 +41,21 @@ const asientoSchema = new mongoose.Schema({
      * @returns {Promise<boolean>} Una promesa que se resuelve con `true` si la reserva fue exitosa, o lanza un error en caso contrario.
      * @throws {Error} Si los datos de reserva son inválidos o si algún asiento no está disponible.
      */
-    async reservarAsientos(funcionId, asientosSeleccionados) { 
+    static async reservarAsientos(funcionId, asientosSeleccionados) { 
         try {
             // Validar datos de entrada
             if (!funcionId || !asientosSeleccionados || !Array.isArray(asientosSeleccionados) || asientosSeleccionados.length === 0) {
                 throw new Error('Datos de reserva inválidos');
             }
+            function obtenerCategoriaDesdeNumero(seatNumber) {
+                const fila = seatNumber.charAt(0);
+              
+                if (fila === 'A' || fila === 'B') {
+                  return 'premium'; 
+                } else {
+                  return 'normal';
+                }
+              }
     
             // Crear los asientos reservados
             const asientosReservados = await Asiento.insertMany(
@@ -178,7 +187,7 @@ const asientoSchema = new mongoose.Schema({
         }
     }
 
-     async liberarAsientosExpirados() {
+     static async liberarAsientosExpirados() {
         try {
             const fechaExpiracion = new Date();
             fechaExpiracion.setMinutes(fechaExpiracion.getMinutes() - 15); // 15 minutos de tiempo de expiración
@@ -208,6 +217,7 @@ const asientoSchema = new mongoose.Schema({
             // Puedes manejar el error aquí o lanzar una excepción para que sea capturada a nivel de aplicación
         }
     }
+    
 }
 
 

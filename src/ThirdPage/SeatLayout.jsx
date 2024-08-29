@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import '../style/ThirdScreenCss.css'; 
+import { useState, useEffect } from 'react';
+import '../style/ThirdScreenCss.css';
 
 function SeatLayout({ seats, occupiedSeats, onSeatSelectionChange }) {
   const [selectedSeatsLocal, setSelectedSeatsLocal] = useState([]);
 
   const handleSeatClick = (e, seatNumber) => {
     e.preventDefault(); // Evita la recarga de la página al hacer clic
-    if (occupiedSeats.includes(seatNumber)) return; 
+    if (occupiedSeats.includes(seatNumber)) return;
 
     setSelectedSeatsLocal(prevSelectedSeats => {
       if (prevSelectedSeats.includes(seatNumber)) {
@@ -18,27 +18,27 @@ function SeatLayout({ seats, occupiedSeats, onSeatSelectionChange }) {
       }
     });
   };
+  useEffect(() => {
+    onSeatSelectionChange(selectedSeatsLocal)
+  }, [selectedSeatsLocal])
 
-  const handleConfirmSelection = () => {
-    onSeatSelectionChange(selectedSeatsLocal); // Envía la selección final a ThirdScreen
-  };
 
   return (
     <section className="asientos">
       <form id="myform">
         {seats.map((row, rowIndex) => (
-          <article key={rowIndex} className="asientos__normal"> 
-            <div fila={rowIndex + 1}> 
+          <article key={rowIndex} className="asientos__normal">
+            <div>
               <small>{String.fromCharCode(65 + rowIndex)}</small>
               <div className="asientos__lista">
                 {row.map(seat => (
-                  <button 
+                  <button
                     key={seat.number}
                     className={`seat ${seat.status} ${selectedSeatsLocal.includes(seat.number) ? 'selected' : ''}`}
                     onClick={(e) => handleSeatClick(e, seat.number)} // Pasa el evento al manejador
                     disabled={seat.status === 'occupied'}
                   >
-                    {seat.status !== 'occupied' && seat.number} 
+                    {seat.status !== 'occupied' && seat.number}
                   </button>
                 ))}
               </div>

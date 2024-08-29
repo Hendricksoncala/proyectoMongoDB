@@ -4,7 +4,7 @@ import axios from 'axios';
 import '../style/ThirdScreenCss.css';
 import SeatLayout from '../ThirdPage/SeatLayout';
 
-function ThirdScreen({ onSeatSelectionChange }) {
+function ThirdScreen() {
   const { id } = useParams(); // ID de la película
   const navigate = useNavigate();
 
@@ -81,15 +81,17 @@ function ThirdScreen({ onSeatSelectionChange }) {
 
   const handlePurchase = async () => {
     try {
+      console.log('Purchase')
       const url = `http://localhost:3000/api/funciones/${selectedFuncion._id}/reservar`;
       console.log("URL de la solicitud:", url);
       const response = await axios.post(url, {
+      
         asientosSeleccionados: selectedSeats
       });
   
       console.log("Respuesta del servidor:", response.data);
-      actualizarEstadoAsientos(response.data.asientosOcupados); 
-    
+      actualizarEstadoAsientos(response.data.asientosOcupados); // Usa la respuesta del backend
+
       navigate(`/confirmacion/${response.data._id}`);
     } catch (error) {
       console.error('Error al reservar asientos:', error);
