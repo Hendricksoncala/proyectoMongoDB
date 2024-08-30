@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../style/ThirdScreenCss.css';
 import SeatLayout from '../ThirdPage/SeatLayout';
 
+
 function ThirdScreen() {
   const { id } = useParams(); // ID de la película
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ function ThirdScreen() {
 
   useEffect(() => {
     if (selectedFuncion) {
+      // Obtener asientos ocupados de la función seleccionada
+      const asientosOcupados = selectedFuncion.asientos_ocupados.map(asiento => asiento.numero);
+  
+      // Crear la matriz inicial de asientos con base en las filas y asientos por fila
       const filas = ['A', 'B', 'C', 'D', 'E', 'F']; 
       const asientosPorFila = 8; 
   
@@ -49,14 +54,14 @@ function ThirdScreen() {
           const seatNumber = fila + (colIndex + 1);
           return {
             number: seatNumber,
-            status: 'available' 
+            status: asientosOcupados.includes(seatNumber) ? 'occupied' : 'available'
           };
         })
       );
   
       setSeats(initialSeats);
     }
-  }, [selectedFuncion]); 
+  }, [selectedFuncion]);
 
   const actualizarEstadoAsientos = (asientosOcupados) => {
     setSeats(prevSeats => 
@@ -81,17 +86,17 @@ function ThirdScreen() {
 
   const handlePurchase = async () => {
     try {
-      console.log('Purchase')
+      console.log('Purchase');
       const url = `http://localhost:3000/api/funciones/${selectedFuncion._id}/reservar`;
       console.log("URL de la solicitud:", url);
       const response = await axios.post(url, {
-      
         asientosSeleccionados: selectedSeats
       });
   
       console.log("Respuesta del servidor:", response.data);
-      actualizarEstadoAsientos(response.data.asientosOcupados); // Usa la respuesta del backend
-
+      // Actualizar los asientos ocupados en la interfaz de usuario
+      actualizarEstadoAsientos(response.data.asientosOcupados);
+  
       navigate(`/confirmacion/${response.data._id}`);
     } catch (error) {
       console.error('Error al reservar asientos:', error);

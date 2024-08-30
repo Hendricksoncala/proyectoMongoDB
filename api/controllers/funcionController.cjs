@@ -153,3 +153,15 @@ exports.obtenerAsientosDeFuncion = async (req, res) => {
     }
   };
   
+
+
+exports.getFunciones = async (req, res) => {
+    try {
+      const funciones = await Funcion.find({ pelicula_id: req.params.id }).populate('asientos_ocupados');
+      
+      res.json(funciones);
+    } catch (error) {
+      console.error('Error al obtener funciones:', error);
+      res.status(500).json({ error: 'Error interno del servidor al obtener funciones' });
+    }
+  };

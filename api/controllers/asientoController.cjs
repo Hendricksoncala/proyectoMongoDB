@@ -1,5 +1,6 @@
 const AsientoManager  = require('../models/asientoMODELNEW.cjs');
 // const { Asiento, AsientoManager } = require('../models/asientoModel.cjs');
+const Funcion = require('../models/funcionModel.cjs'); 
 
 const { ObjectId } = require("mongodb");
 const { validationResult } = require('express-validator');
@@ -24,30 +25,30 @@ function obtenerCategoriaDesdeNumero(seatNumber) {
  * @param {Object} res - El objeto de respuesta HTTP.
  * @returns {Promise<void>} Envía una respuesta JSON indicando el éxito de la reserva o un mensaje de error en caso de fallo.
  */
+
 exports.reservarAsientos = async (req, res) => {
   try {
     console.log('Datos recibidos en la solicitud:', req.params, req.body);
 
-    // ... validaciones 
-
-    const funcionId = new ObjectId(req.params.funcionId); // <-SE NECESITA LA SALA ID
+    const funcionId = new ObjectId(req.params.funcionId);
     const asientosSeleccionados = req.body.asientosSeleccionados;
-
-    // ... lógica para verificar la disponibilidad de los asientos (opcional)
 
     console.log('Asientos seleccionados:', asientosSeleccionados);
 
-    // Crear los asientos reservados (agrega funcion_id y estado) 
-    const asientosReservados = await AsientoManager.createMany(funcionId, asientosSeleccionados); // <-SE NECESITA LA SALA ID
-
-    console.log(asientosReservados)
+    // Crear los asientos reservados
+    const asientosReservados = await AsientoManager.createMany(funcionId, asientosSeleccionados);
+    console.log('Asientos reservados:', asientosReservados);
 
     const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
 
     // Actualizar la función para agregar los asientos ocupados
-    const funcionActualizada = await Funcion.findByIdAndUpdate(funcionId, {
-      $push: { asientos_ocupados: { $each: asientosReservadosIds } }
-    }, { new: true });
+    const funcionActualizada = await Funcion.findByIdAndUpdate(
+      funcionId,
+      {
+        $push: { asientos_ocupados: { $each: asientosReservadosIds } }
+      },
+      { new: true } // Esta opción devuelve el documento modificado
+    );
 
     // Obtener los asientos ocupados actualizados de la función
     const asientosOcupadosActualizados = funcionActualizada.asientos_ocupados;
