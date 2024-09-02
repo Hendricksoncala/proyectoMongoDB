@@ -1,22 +1,25 @@
 .movie-card {
     border-radius: 10px; /* Bordes redondeados */
     overflow: hidden; /* Evita que el contenido se desborde */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+
   }
   
   .movie-card {
  /* Ajusta el ancho según tus necesidades */
     margin: 1rem auto; /* Centra la tarjeta */
+    
   }
   .movie-card img {
     width: 10vw;
     height: auto; /* O la altura que desees */
     object-fit: cover; /* Ajusta la imagen para cubrir el contenedor */
+    border-radius: 20px;
   }
   
   .movie-card h2 {
     font-size: 1.5rem;
     margin: 0.5rem 0;
+    text-overflow: none;  
   }
   
   .movie-card p {

@@ -1,16 +1,8 @@
-const AsientoManager  = require('../models/asientoMODELNEW.cjs');
-const { Asiento } = require('../models/asientoModel.cjs');
-const Funcion = require('../models/funcionModel.cjs'); 
-
 const { ObjectId } = require("mongodb");
 const { validationResult } = require('express-validator');
 const asientoValidator = require('../validators/asientoValidator.cjs');
-
-const mongoose = require('mongoose');
-//AQUI HUBO CAMBIO------------------
-// const {obtenerSalaPorId} = require('../controllers/salaController.cjs');
-//----------------------------------
-const salaId = obtenerSalaPorId(); 
+const { AsientoManager } = require('../models/asientoModel.cjs');
+const Funcion = require('../models/funcionModel.cjs'); 
 
 
 
@@ -44,51 +36,31 @@ exports.reservarAsientos = async (req, res) => {
 
     console.log('Asientos seleccionados:', asientosSeleccionados);
 
-    const asientosReservados = await Asiento.insertMany(
-      asientosSeleccionados.map(seatNumber => {
-        const [fila, numeroStr] = seatNumber.split('');
-        const numero = parseInt(numeroStr, 10);
-        const categoria = obtenerCategoriaDesdeNumero(seatNumber);
-        return { 
-          numero, 
-          fila, 
-          categoria, 
-          funcion_id: funcionId, 
-          sala_id: salaId, // Asegúrate de definir salaId
-          estado: 'reservado'
-        };
-      }),
-      { ordered: false }
-    );
-
-    const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
-
-    const funcionActualizada = await Funcion.findByIdAndUpdate(
-      funcionId,
-      {
-        $addToSet: { asientos_ocupados: { $each: asientosReservadosIds } }
-      },
-      { new: true }
-    );
-
-    if (!funcionActualizada) {
+    // Obtener la función para verificar que existe y obtener la sala_id
+    const funcion = await Funcion.findById(funcionId);
+    if (!funcion) {
       return res.status(404).json({ error: 'Función no encontrada' });
     }
 
-    const asientosOcupadosActualizados = funcionActualizada.asientos_ocupados;
+    // Usar el campo sala_id si es necesario en tu lógica
+    const salaId = funcion.sala_id;
+
+    // Llamar a reservarAsientos de AsientoManager, pasando salaId
+    const resultadoReserva = await AsientoManager.reservarAsientos(funcionId, asientosSeleccionados, salaId);
+
+    if (!resultadoReserva.success) { // Manejar el caso donde la reserva falla
+      return res.status(500).json({ error: resultadoReserva.message });
+    }
 
     res.status(201).json({
       message: 'Asientos reservados correctamente',
-      asientos: asientosReservados,
-      asientosOcupados: asientosOcupadosActualizados
+      asientosOcupados: resultadoReserva.asientosOcupados // Enviar los asientos ocupados actualizados
     });
   } catch (error) {
     console.error('Error al reservar asientos:', error);
     res.status(500).json({ error: 'Error interno del servidor al reservar asientos' });
   }
 };
-
-
 /**
  * Cancela la reserva de los asientos especificados para una función.
  *

@@ -24,13 +24,49 @@ class Funcion {
     }
 
     /**
+     * Actualiza los asientos ocupados de una función por su ID.
+     *
+     * @param {string} id - El ID de la función a actualizar.
+     * @param {Array<string>} asientosSeleccionados - Los asientos que se van a reservar.
+     * @returns {Promise<Object>} El documento actualizado de la función.
+     * @throws {Error} Si ocurre un error al actualizar los asientos.
+     */
+    static async updateAsientosOcupados(id, asientosSeleccionados) {
+        try {
+            if (!ObjectId.isValid(id)) {
+                throw new Error('ID de función inválido');
+            }
+
+            const result = await coleccionFuncion.updateOne(
+                { _id: new ObjectId(id) },
+                {
+                    $addToSet: { asientos_ocupados: { $each: asientosSeleccionados } }
+                }
+            );
+
+            if (result.modifiedCount === 0) {
+                throw new Error(`No se pudo actualizar la función con ID ${id}`);
+            }
+
+            // Retorna el documento actualizado
+            const funcionActualizada = await Funcion.findById(id);
+            return funcionActualizada;
+        } catch (error) {
+            console.error('Error al actualizar los asientos ocupados:', error);
+            throw error;
+        }
+    }
+
+
+
+    /**
      * Obtiene una función por su ID.
      *
      * @param {string} id - El ID de la función a buscar.
      * @returns {Promise<Object|null>} Una promesa que se resuelve con la función encontrada o null si no se encuentra.
      * @throws {Error} Si el ID de la función es inválido o si ocurre un error al buscar la función.
      */
-    static async getById(id) {
+    static async findById(id) {
         try {
             if (!ObjectId.isValid(id)) {
                 throw new Error('ID de función inválido');

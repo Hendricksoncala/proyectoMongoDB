@@ -24,19 +24,19 @@ exports.obtenerTodasSalas = async (req, res) => {
  * @param {Object} res - El objeto de respuesta HTTP.
  * @returns {Promise<void>} Envía una respuesta JSON con la sala encontrada o un mensaje de error en caso de fallo.
  */
-exports.obtenerSalaPorId = async (req, res) => {
-    try {
-        const salaId = req.params.id;
-        const sala = await Sala.getById(salaId);
-        res.status(200).json(sala);
-    } catch (error) {
-        if (error.message.includes('no encontrada')) {
-            res.status(404).json({ error: error.message });
-        } else {
-            res.status(500).json({ error: error.message });
-        }
-    }
-};
+// exports.obtenerSalaPorId = async (req, res) => {
+//     try {
+//         const salaId = req.params.id;
+//         const sala = await Sala.getById(salaId);
+//         res.status(200).json(sala);
+//     } catch (error) {
+//         if (error.message.includes('no encontrada')) {
+//             res.status(404).json({ error: error.message });
+//         } else {
+//             res.status(500).json({ error: error.message });
+//         }
+//     }
+// };
 
 /**
  * Crea una nueva sala.

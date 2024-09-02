@@ -2,12 +2,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 10px;
 
 }
 
 .search-bar input {
     width: 85%;
     height: 5vh;
+    border:none
 
 }
 

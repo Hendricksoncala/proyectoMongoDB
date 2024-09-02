@@ -1,4 +1,4 @@
-const { ObjectId } = require( "mongodb");
+const { ObjectId } = require("mongodb");
 const connect = require("../helpers/connection.cjs"); // Asegúrate de que la ruta sea correcta
 const mongoose = require('mongoose');
 
@@ -13,9 +13,9 @@ const asientoSchema = new mongoose.Schema({
     numero: Number, 
     fila: String,
     categoria: String, 
-    funcion_id: {
+    sala_id: { // Asegúrate de tener sala_id en tu esquema
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Funcion' 
+      ref: 'Sala' 
     },
     estado: { 
       type: String,
@@ -28,36 +28,17 @@ const asientoSchema = new mongoose.Schema({
 
 
  class AsientoManager {
-    static instance;
-    constructor() {
-        // No necesitas un constructor específico aquí
-    }
+    // ... (otros métodos)
 
-    /**
-     * Reserva los asientos especificados para una función.
-     *
-     * @param {ObjectId} funcionId - El ID de la función para la que se reservarán los asientos.
-     * @param {ObjectId[]} asientosIds - Un array de ObjectIds que representan los asientos a reservar.
-     * @returns {Promise<boolean>} Una promesa que se resuelve con `true` si la reserva fue exitosa, o lanza un error en caso contrario.
-     * @throws {Error} Si los datos de reserva son inválidos o si algún asiento no está disponible.
-     */
-    static async reservarAsientos(funcionId, asientosSeleccionados) { 
+    static async reservarAsientos(funcionId, asientosSeleccionados, salaId) { 
         try {
-            // Validar datos de entrada
-            if (!funcionId || !asientosSeleccionados || !Array.isArray(asientosSeleccionados) || asientosSeleccionados.length === 0) {
-                throw new Error('Datos de reserva inválidos');
-            }
+            // ... (validación de datos de entrada)
+
             function obtenerCategoriaDesdeNumero(seatNumber) {
-                const fila = seatNumber.charAt(0);
-              
-                if (fila === 'A' || fila === 'B') {
-                  return 'premium'; 
-                } else {
-                  return 'normal';
-                }
-              }
-    
-            // Crear los asientos reservados
+                // ... (lógica existente)
+            }
+
+            // Crear los asientos reservados (usando salaId)
             const asientosReservados = await Asiento.insertMany(
                 asientosSeleccionados.map(seatNumber => {
                     const [fila, numeroStr] = seatNumber.split('');
@@ -67,31 +48,37 @@ const asientoSchema = new mongoose.Schema({
                         numero, 
                         fila, 
                         categoria,
-                        funcion_id: funcionId,
+                        sala_id: salaId, // Usar salaId aquí
                         estado: 'reservado'
                     };
                 })
             );
-    
-            const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
-    
+
+            const asientosReservadosIds = asientosReservados.insertedIds;
+
             // Actualizar la función para agregar los asientos ocupados
-            const funcionActualizada = await Funcion.findByIdAndUpdate(funcionId, {
-                $push: { asientos_ocupados: { $each: asientosReservadosIds } }
-            }, { new: true }); 
-    
-            // Obtener los asientos ocupados actualizados de la función
-            const asientosOcupadosActualizados = funcionActualizada.asientos_ocupados;
-    
+            const funcionActualizada = await Funcion.updateAsientosOcupados(funcionId, asientosSeleccionados);
+
             console.log("Asientos reservados correctamente");
             return { 
+                success: true, // Indicar que la reserva fue exitosa
                 message: 'Asientos reservados correctamente', 
                 asientos: asientosReservados, 
-                asientosOcupados: asientosOcupadosActualizados 
+                asientosOcupados: funcionActualizada.asientos_ocupados 
             };
         } catch (error) {
             console.error('Error al reservar asientos:', error);
-            throw error;
+
+            // Manejo de errores más específico
+            if (error.message === 'Datos de reserva inválidos') {
+                return { success: false, message: 'Datos de reserva inválidos' }; 
+            } else if (error.message === 'Función no encontrada') {
+                return { success: false, message: 'Función no encontrada' }; 
+            } else if (error.message.includes('duplicate key')) {
+                return { success: false, message: 'Uno o más asientos ya están reservados' }; 
+            } else {
+                return { success: false, message: 'Error interno al reservar asientos' }; 
+            }
         }
     } 
 

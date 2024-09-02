@@ -3,28 +3,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2vh;
   width: max-content;
-  width: 90%;
+  width: 100vw;
+  justify-content: space-between;
   
-  
+}
+
+.slick-track{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .welcome-card {
   display: flex;
   align-items: center;
   color: hsl(0, 0%, 100%);
   font-size: 0.8rem;
-  border-radius: 1000px;
   padding: 10px;
-  justify-content: space-around;
-  width: max-content;
+  justify-content: space-between;
+  gap: 6vw;
+
 
 }
+.button-dong{
+  border:none;
+  background: none;
+}
+
 .welcome-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
+  gap: 9vw;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 12px;
 }
@@ -45,10 +55,4 @@
   height: 48px;
   width: 48px;
   border-radius: 1000px;
-}
-
-aside button {
-  height: 5vh;
-  width: 5vw;
-  color: red
 }

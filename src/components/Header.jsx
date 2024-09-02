@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaBell } from 'react-icons/fa'; // Si usas React Icons
 import '../style/Header.css'
+import frame94 from '../assets/Frame 94.svg';
 
 function Header() {
   return (
@@ -18,8 +19,8 @@ function Header() {
           </div>
         </header>
         <aside>
-          <button>
-            <i className="fa-solid fa-bell">cam</i>
+          <button className="button-dong">
+            <img src={frame94}  /> 
  
           </button>
         </aside>
