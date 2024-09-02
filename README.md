@@ -1,5 +1,33 @@
 📕 **Título: CineCampus**
 
+
+
+
+
+
+PRIMERO HAZ:
+npm i
+
+LUEGO DEBES ABRIR DOBLE CONSOLA
+
+EN LA PRIMERA:
+npm run dev
+
+EN LA SEGUNDA:
+npm run test
+
+
+
+
+
+
+
+
+
+
+
+
+
 ------
 
 **Tiempo de ejecución**: 4 Dias
