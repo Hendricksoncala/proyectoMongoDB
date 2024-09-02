@@ -67,7 +67,7 @@ function ThirdScreen() {
     setSeats(prevSeats => 
       prevSeats.map(row => 
         row.map(seat => 
-          asientosOcupados.includes(seat.number) ? { ...seat, status: 'occupied' } : seat
+          asientosOcupados.includes(seat.number) ? { ...seat, status: 'ocupado' } : seat
         )
       )
     );
@@ -89,18 +89,21 @@ function ThirdScreen() {
       console.log('Purchase');
       const url = `http://localhost:3000/api/funciones/${selectedFuncion._id}/reservar`;
       console.log("URL de la solicitud:", url);
+  
       const response = await axios.post(url, {
         asientosSeleccionados: selectedSeats
       });
   
-      console.log("Respuesta del servidor:", response.data);
-      // Actualizar los asientos ocupados en la interfaz de usuario
-      actualizarEstadoAsientos(response.data.asientosOcupados);
-  
-      navigate(`/confirmacion/${response.data._id}`);
+      if (response.status === 201) {
+        console.log("Respuesta del servidor:", response.data);
+        actualizarEstadoAsientos(response.data.asientosOcupados);
+        navigate(`/confirmacion/${response.data._id}`);
+      } else {
+        console.error('Error en la respuesta del servidor:', response.data);
+      }
     } catch (error) {
-      console.error('Error al reservar asientos:', error);
-      // Podrías mostrar un mensaje de error al usuario aquí
+      console.error('Error al reservar asientos:', error.response ? error.response.data : error.message);
+      // Mostrar mensaje de error al usuario aquí
     }
   };
 

@@ -1,5 +1,5 @@
 const AsientoManager  = require('../models/asientoMODELNEW.cjs');
-// const { Asiento, AsientoManager } = require('../models/asientoModel.cjs');
+const { Asiento } = require('../models/asientoModel.cjs');
 const Funcion = require('../models/funcionModel.cjs'); 
 
 const { ObjectId } = require("mongodb");
@@ -7,6 +7,11 @@ const { validationResult } = require('express-validator');
 const asientoValidator = require('../validators/asientoValidator.cjs');
 
 const mongoose = require('mongoose');
+//AQUI HUBO CAMBIO------------------
+// const {obtenerSalaPorId} = require('../controllers/salaController.cjs');
+//----------------------------------
+const salaId = obtenerSalaPorId(); 
+
 
 
 function obtenerCategoriaDesdeNumero(seatNumber) {
@@ -30,27 +35,46 @@ exports.reservarAsientos = async (req, res) => {
   try {
     console.log('Datos recibidos en la solicitud:', req.params, req.body);
 
-    const funcionId = new ObjectId(req.params.funcionId);
+    const funcionId = req.params.funcionId;
     const asientosSeleccionados = req.body.asientosSeleccionados;
+
+    if (!funcionId || !Array.isArray(asientosSeleccionados) || asientosSeleccionados.length === 0) {
+      return res.status(400).json({ error: 'Datos de reserva inválidos' });
+    }
 
     console.log('Asientos seleccionados:', asientosSeleccionados);
 
-    // Crear los asientos reservados
-    const asientosReservados = await AsientoManager.createMany(funcionId, asientosSeleccionados);
-    console.log('Asientos reservados:', asientosReservados);
+    const asientosReservados = await Asiento.insertMany(
+      asientosSeleccionados.map(seatNumber => {
+        const [fila, numeroStr] = seatNumber.split('');
+        const numero = parseInt(numeroStr, 10);
+        const categoria = obtenerCategoriaDesdeNumero(seatNumber);
+        return { 
+          numero, 
+          fila, 
+          categoria, 
+          funcion_id: funcionId, 
+          sala_id: salaId, // Asegúrate de definir salaId
+          estado: 'reservado'
+        };
+      }),
+      { ordered: false }
+    );
 
     const asientosReservadosIds = asientosReservados.map(asiento => asiento._id);
 
-    // Actualizar la función para agregar los asientos ocupados
     const funcionActualizada = await Funcion.findByIdAndUpdate(
       funcionId,
       {
-        $push: { asientos_ocupados: { $each: asientosReservadosIds } }
+        $addToSet: { asientos_ocupados: { $each: asientosReservadosIds } }
       },
-      { new: true } // Esta opción devuelve el documento modificado
+      { new: true }
     );
 
-    // Obtener los asientos ocupados actualizados de la función
+    if (!funcionActualizada) {
+      return res.status(404).json({ error: 'Función no encontrada' });
+    }
+
     const asientosOcupadosActualizados = funcionActualizada.asientos_ocupados;
 
     res.status(201).json({
